@@ -1,19 +1,42 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import mediaUpload from "../../utils/mediaUpload";
 
-export default function AddProductForm() {
-  const [productId, setProductId] = useState("");
-  const [name, setName] = useState("");
-  const [altName, setAltName] = useState("");
-  const [price, setPrice] = useState("");
-  const [labeledPrice, setLabeledPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [images, setImages] = useState([]);
-  const [stock, setStock] = useState("");
+export default function EditProductForm() {
+  const locationData = useLocation();
   const navigate = useNavigate();
+  //   console.log(locationData);
+//   if (locationData.state == null) {
+//     toast.error("Please select a product to edit");
+//     window.location.href = "/admin/products";
+//   }
+
+  
+  const [productId, setProductId] = useState(locationData.state.productId);
+  const [name, setName] = useState(locationData.state.name);
+//   const [altNames, setAltNames] = useState(locationData.state.altNames);
+const [altName, setAltName] = useState(locationData.state.altName.join(","));
+// const [altNames, setAltNames] = useState(locationData.state.altNames?.join(",") || "");
+// const [altNames, setAltNames] = useState(() => {
+//     const alt = locationData.state?.altNames;
+//     if (Array.isArray(alt)) return alt.join(",");
+//     if (typeof alt === "string") return alt;
+//     return "";
+//   });
+//   const [altNames, setAltNames] = useState(locationData.state.altNames.join(","));
+  const [price, setPrice] = useState(locationData.state.price);
+  const [labeledPrice, setLabeledPrice] = useState(locationData.state.labeledPrice);
+  const [description, setDescription] = useState(locationData.state.description);
+  const [images, setImages] = useState([]);
+  const [stock, setStock] = useState(locationData.state.stock);
+
+  if (!locationData.state) {
+    toast.error("Please select a product to edit");
+    navigate("/admin/products");
+    return null; // prevent component rendering
+  }
 
   async function handleSubmit() {
     const promisesArray = [];
@@ -23,10 +46,16 @@ export default function AddProductForm() {
     }
     // console.log(promisesArray);
     try {
-      const result = await Promise.all(promisesArray);
+      let result = await Promise.all(promisesArray);
       //console.log(result);
 
+      if(images.length==0){
+        result=locationData.state.images
+      }
+
       const altNameInArray = altName.split(",");
+    // const altNamesInArray = altNames.split(",").map(name => name.trim());
+
       const product = {
         productId: productId,
         name: name,
@@ -36,11 +65,7 @@ export default function AddProductForm() {
         description: description,
         stock: stock,
         images: result,
-        // Images: [
-        //   "https://picsum.photos/id/102/200/300",
-        //   "https://picsum.photos/id/103/200/300",
-        //   "https://picsum.photos/id/104/200/300",
-        // ],
+       
       };
 
       const token = localStorage.getItem("token");
@@ -48,26 +73,21 @@ export default function AddProductForm() {
 
       //console.log(product);
 
-     await axios
-        .post(import.meta.env.VITE_BACKEND_URL + "/api/product", product, {
+      await axios.put(
+        // import.meta.env.VITE_BACKEND_URL + "/api/product"+productId,
+        `${import.meta.env.VITE_BACKEND_URL}/api/product/${productId}`,
+        product,
+        {
           headers: {
             Authorization: "Bearer " + token,
           },
-        })
-        toast.success("Product added successfully");
-          navigate("/admin/products");
-
-        // .then(() => {
-        //   toast.success("Product added successfully");
-        //   navigate("/admin/products");
-        // })
-        // .catch(() => {
-        //   toast.error("Failed to add product");
-        // });
-
+        }
+      );
+      toast.success("Product updated successfully");
+      navigate("/admin/products");
     } catch (error) {
       console.log(error);
-      toast.error("Failed to add product");
+      toast.error("Failed to update product");
     }
 
     toast.success("Form Submitted successfully");
@@ -77,9 +97,10 @@ export default function AddProductForm() {
     <div className="w-full h-full rounded-lg flex justify-center items-center">
       <div className="w-[500px] h-[600px] shadow-lg rounded-lg flex flex-col justify-center items-center">
         <h1 className="text-3xl font-bold text-gray-600 m-[10px]">
-          Add Product
+          Edit Product
         </h1>
         <input
+        disabled
           value={productId}
           onChange={(e) => {
             setProductId(e.target.value);
@@ -170,15 +191,10 @@ export default function AddProductForm() {
             onClick={handleSubmit}
             className="bg-green-500 text-white rounded-lg block w-[180px] text-center p-[10px]  hover:bg-green-600"
           >
-            Add Product
+            Edit Product
           </button>
         </div>
       </div>
     </div>
   );
 }
-
-/*
-Project url: https://idaerdhzipvnpcwbzfft.supabase.co
-anon public key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkYWVyZGh6aXB2bnBjd2J6ZmZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyMDI4MjcsImV4cCI6MjA2MTc3ODgyN30.APMMkdLB6Y_xhuWKRswJ7h0s31O9mLrNoRmqwDfZXeY 
-*/
