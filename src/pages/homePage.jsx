@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <div className="w-full h-screen max-h-screen">
       <Header />
-      <div className="w-full min-h-[calc(100%-70px)]">
+      <div className="w-full h-[calc(100%-70px)] min-h-[calc(100%-70px)]">
         <Routes path="/*">
           <Route path="/" element={<h1>Home Page</h1>} />
            <Route path="/products" element={<ProductPage />} />
