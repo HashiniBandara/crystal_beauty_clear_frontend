@@ -4,6 +4,7 @@ import Loader from "../../components/loader";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import ImageSlider from "../../components/imageSlider";
+import getCart, { addToCart } from "../../utils/cart";
 
 export default function ProductOverview() {
   const params = useParams();
@@ -67,11 +68,22 @@ export default function ProductOverview() {
               {product.description}
             </p>
 
-<div className="w-full flex justify-center mb-[40px]">
-<button className="w-[200px] h-[50px] cursor-pointer bg-pink-800 text-white rounded-xl border border-pink-800 hover:bg-white hover:text-pink-800">Add to cart</button>
-<button className="w-[200px] h-[50px] cursor-pointer bg-pink-800 text-white rounded-xl ml-[40px] border border-pink-800 hover:bg-white hover:text-pink-800">Buy Now</button>
-</div>
-
+            <div className="w-full flex justify-center mb-[40px]">
+              <button
+                className="w-[200px] h-[50px] cursor-pointer bg-pink-800 text-white rounded-xl border border-pink-800 hover:bg-white hover:text-pink-800"
+                onClick={() => {
+                  const updated = addToCart(product, 1);
+                  console.log(updated);
+                  console.log(getCart());
+                  toast.success("Added to cart");
+                }}
+              >
+                Add to cart
+              </button>
+              <button className="w-[200px] h-[50px] cursor-pointer bg-pink-800 text-white rounded-xl ml-[40px] border border-pink-800 hover:bg-white hover:text-pink-800">
+                Buy Now
+              </button>
+            </div>
           </div>
         </div>
       )}
