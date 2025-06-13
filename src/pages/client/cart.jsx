@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
-import getCart, { addToCart, removeFromCart } from "../../utils/cart";
+import getCart, {
+  addToCart,
+  getTotal,
+  getTotalForLabeledPrice,
+  removeFromCart,
+} from "../../utils/cart";
 import { TbTrash } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
   const [cartLoaded, setCartLoaded] = useState(false);
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!cartLoaded) {
@@ -35,15 +42,14 @@ export default function CartPage() {
               </button> */}
 
               <button
-  className="absolute right-[-50px] top-1/2 transform -translate-y-1/2 bg-red-500 w-[30px] h-[30px] text-white text-xl cursor-pointer shadow-2xl rounded-full flex justify-center items-center"
-  onClick={() => {
-    removeFromCart(item.productId);
-    setCartLoaded(false);
-  }}
->
-  <TbTrash />
-</button>
-
+                className="absolute right-[-50px] top-1/2 transform -translate-y-1/2 bg-red-500 w-[30px] h-[30px] text-white text-xl cursor-pointer shadow-2xl rounded-full flex justify-center items-center"
+                onClick={() => {
+                  removeFromCart(item.productId);
+                  setCartLoaded(false);
+                }}
+              >
+                <TbTrash />
+              </button>
 
               <img
                 src={item.images}
@@ -83,13 +89,45 @@ export default function CartPage() {
               </div>
 
               <div className="h-full w-[100px] flex justify-center items-center">
-                <h1 className="text-xl">
+                <h1 className="text-xl w-full text-end pr-2">
                   {(item.quantity * item.price).toFixed(2)}
                 </h1>
               </div>
             </div>
           );
         })}
+
+        <div className="w-full flex justify-end">
+          <h1 className="w-[100px] text-xl text-end pr-2">Total</h1>
+          <h1 className="w-[100px] text-xl text-end pr-2">
+            {getTotalForLabeledPrice().toFixed(2)}
+          </h1>
+        </div>
+
+        <div className="w-full flex justify-end">
+          <h1 className="w-[100px] text-xl text-end pr-2">Discount</h1>
+          <h1 className="w-[100px] text-xl text-end pr-2 border-b-[2px]">
+            {(getTotalForLabeledPrice() - getTotal()).toFixed(2)}
+          </h1>
+        </div>
+
+        <div className="w-full flex justify-end">
+          <h1 className="w-[100px] text-xl text-end pr-2">Net Total</h1>
+          <h1 className="w-[100px] text-xl text-end pr-2 border-double border-b-[4px]">
+            {getTotal().toFixed(2)}
+          </h1>
+        </div>
+
+        <div className="w-full flex justify-end mt-4">
+          <button
+            className="w-[170px] h-[40px] text-white rounded-lg text-xl cursor-pointer bg-pink-400 shadow-2xl"
+            onClick={() => {
+              navigate("/checkout", { state: { items: cart } });
+            }}
+          >
+            Checkout
+          </button>
+        </div>
       </div>
     </div>
   );
