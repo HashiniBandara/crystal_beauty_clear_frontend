@@ -2,12 +2,46 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import { GrGoogle } from "react-icons/gr";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: (res) => {
+      //console.log(res);
+      setLoading(true);
+      axios
+        .post(import.meta.env.VITE_BACKEND_URL + "/api/user/google", {
+          accessToken: res.access_token,
+        })
+        .then((response) => {
+          console.log("Login Response:", response.data);
+          if (response.data.success) {
+            // Ensure success before showing toast
+            toast.success("Login successful");
+          } else {
+            toast.error(response.data.message || "Login failed");
+          }
+          localStorage.setItem("token", response.data.token);
+
+          const user = response.data.user;
+          if (user.role === "admin") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/");
+          }
+          setLoading(false);
+        }).catch((error) => {
+          console.log("Login Failed", error.response?.data);
+          toast.error(error.response?.data?.message || "Login failed");
+          setLoading(false);
+        });
+    },
+  });
 
   // function handleLogin() {
   //   console.log("Email:", email);
@@ -34,7 +68,7 @@ export default function LoginPage() {
   function handleLogin() {
     // console.log("Email:", email);
     // console.log("Password:", password);
-  setLoading(true);
+    setLoading(true);
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "/api/user/login", {
         email: email,
@@ -42,32 +76,31 @@ export default function LoginPage() {
       })
       .then((response) => {
         console.log("Login Response:", response.data);
-        if (response.data.success) {  // Ensure success before showing toast
+        if (response.data.success) {
+          // Ensure success before showing toast
           toast.success("Login successful");
         } else {
           toast.error(response.data.message || "Login failed");
         }
         localStorage.setItem("token", response.data.token);
 
-        const user=response.data.user;
-        if(user.role === "admin"){
+        const user = response.data.user;
+        if (user.role === "admin") {
           navigate("/admin/dashboard");
-        }else{
+        } else {
           navigate("/");
         }
         setLoading(false);
-
       })
       .catch((error) => {
         console.log("Login Failed", error.response?.data);
         toast.error(error.response?.data?.message || "Login failed");
         setLoading(false);
       });
-  
+
     console.log("Login button clicked!");
   }
-  
-  
+
   // function handleLogin() {
   //   console.log("Email:", email);
   //   console.log("Password:", password);
@@ -116,8 +149,17 @@ export default function LoginPage() {
             {/* Login */}
             {loading ? "Loading..." : "Login"}
           </button>
+          {/* google login */}
+          <button
+            className="w-[400px] h-[50px] bg-green-500 text-white rounded-xl text-center m-[5px] cursor-pointer flex items-center justify-center"
+            onClick={loginWithGoogle}
+          >
+            {loading ? "Loading..." : "Login with Google "}
+            <GrGoogle className="mr-[10px] ml-[10px]" />
+            {/* Login with Google */}
+          </button>
           <p className="text-gray-600 text-center m-[10px]">
-            Don't have an account?{" "} 
+            Don't have an account?{" "}
             <span className="text-green-500 cursor-pointer hover:text-green-700">
               <Link to={"/register"}>Register Now</Link>
             </span>

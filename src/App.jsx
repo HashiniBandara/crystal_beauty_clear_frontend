@@ -8,10 +8,14 @@ import Testing from "./pages/testing";
 import { Toaster } from "react-hot-toast";
 import RegisterPage from "./pages/client/register";
 import HomePage from "./pages/homePage";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
   return (
-    <BrowserRouter>
+    // client id
+// 240677640067-klr12nk25gn8k6m4vijt8coukgvmr01u.apps.googleusercontent.com
+   <GoogleOAuthProvider clientId="240677640067-klr12nk25gn8k6m4vijt8coukgvmr01u.apps.googleusercontent.com">
+     <BrowserRouter>
       <Toaster position="top-right" />
       <Routes path="/*">
         <Route path="/admin/*" element={<AdminPage />} />
@@ -23,27 +27,9 @@ function App() {
         <Route path="/*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
+   </GoogleOAuthProvider>
 
-    // <div className="bg-red-900">
-    //   <Header />
-    //   <ProductCard name="iPhone 16" description="Product description 1234568987" price="1000"/>
-    //   <ProductCard name="iPhone 15 Pro Max" description="Product description 1234568987" price="1000"/>
-    //   <ProductCard name="iPhone 14 Pro" description="Product description 1234568987" price="1000"/>
-    //   <ProductCard name="iPhone 13 Pro" description="Product description 1234568987" price="1000"/>
-    // </div>
 
-    // <div className="w-full h-screen bg-pink-200">
-    //   <div className="w-[500px] h-[500px] flex flex-col justify-center items-center  bg-gray-200 relative">
-    //   <div className="w-[90px] h-[90px] bg-red-500 "></div>
-    //   <div className="w-[90px] h-[90px] bg-yellow-500 absolute right-[50px] top-[50px]"></div>
-    //   <div className="w-[90px] h-[90px] bg-blue-500 fixed right-[50px] bottom-[50px]"></div>
-    //   <div className="w-[90px] h-[90px] bg-green-500"></div>
-    // </div>
-    // </div>
-
-    // <LoginPage />
-
-    // <AdminPage />
   );
 }
 
