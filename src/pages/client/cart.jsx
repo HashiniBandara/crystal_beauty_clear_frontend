@@ -23,26 +23,15 @@ export default function CartPage() {
 
   return (
     <div className="w-full h-full flex justify-center p-[40px] relative">
-      <div className="w-[700px]">
+      <div className="w-full lg:w-[700px]">
         {cart.map((item, index) => {
           return (
             <div
               key={index}
-              className="w-full h-[100px] my-[5px] bg-white shadow-2xl flex justify-between items-center relative"
+              className="w-full lg:h-[100px] my-[5px] bg-white shadow-2xl flex lg:flex-row flex-col justify-between items-center relative"
             >
-              {/* Trash button here, inside the loop */}
-              {/* <button
-                className="absolute right-[10px] top-[10px] bg-red-500 w-[30px] h-[30px] text-white cursor-pointer rounded-full flex justify-center items-center"
-                onClick={() => {
-                  removeFromCart(item.productId);
-                  setCartLoaded(false);
-                }}
-              >
-                <TbTrash />
-              </button> */}
-
               <button
-                className="absolute right-[-50px] top-1/2 transform -translate-y-1/2 bg-red-500 w-[30px] h-[30px] text-white text-xl cursor-pointer shadow-2xl rounded-full flex justify-center items-center"
+                className="absolute right-4 lg:right-[-50px] lg:top-1/2 top-[20px] transform -translate-y-1/2 bg-red-500 w-[30px] h-[30px] text-white text-xl cursor-pointer shadow-2xl rounded-full flex justify-center items-center"
                 onClick={() => {
                   removeFromCart(item.productId);
                   setCartLoaded(false);
@@ -53,7 +42,7 @@ export default function CartPage() {
 
               <img
                 src={item.images}
-                className="h-full aspect-square object-cover"
+                className="h-[100px] lg:h-full aspect-square object-cover"
               />
 
               <div className="h-full max-w-[300px] w-[300px] overflow-hidden">

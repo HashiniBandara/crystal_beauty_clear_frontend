@@ -145,7 +145,7 @@ export default function AdminOrdersPage() {
                           src={item.image}
                           className="h-full aspect-square object-cover"
                         />
-                        <div className="h-full max-w-[300px] w-[300px] overflow-hidden">
+                        <div className="h-full max-w-[400px] w-[400px] overflow-hidden">
                           <h1 className="text-xl font-bold">
                             {item.productName}
                           </h1>

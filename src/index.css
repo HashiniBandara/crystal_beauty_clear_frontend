@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+@theme{
+    --color-accent:#ff6363; /* can apply this-> className="text-accent"*/
+}
