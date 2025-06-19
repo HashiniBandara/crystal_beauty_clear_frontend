@@ -28,7 +28,7 @@ export default function Header() {
         </Link>
       </div>
       {isOpen && (
-        <div className="fixed top-0 left-0 w-full h-screen bg-[#00000060] flex z-10">
+        <div className="fixed lg:hidden top-0 left-0 w-full h-screen bg-[#00000060] flex z-10">
           <div className="w-[300px] bg-white h-full flex justify-start">
             <GiHamburgerMenu
               className="text-3xl absolute left-[30px] text-accent my-4 cursor-pointer"
