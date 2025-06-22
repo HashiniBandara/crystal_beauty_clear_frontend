@@ -5,6 +5,7 @@ import ProductOverview from "./client/productOverview";
 import CartPage from "./client/cart";
 import CheckoutPage from "./client/checkout";
 
+
 export default function HomePage() {
   return (
     <div className="w-full h-screen max-h-screen">

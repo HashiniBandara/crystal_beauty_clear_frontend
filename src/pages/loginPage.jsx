@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { GrGoogle } from "react-icons/gr";
 
@@ -10,6 +10,23 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+const location = useLocation(); 
+
+//  useEffect(() => {
+//     if (location.state?.registered) {
+//       toast.success("User registered successfully");
+//     }
+//   }, [location.state]);
+useEffect(() => {
+  if (location.state?.registered) {
+    toast.success("User registered successfully");
+    setTimeout(() => {
+      navigate(location.pathname, { replace: true }); // remove state
+    }, 100); // optional delay
+  }
+}, [location.state]);
+
+
   const loginWithGoogle = useGoogleLogin({
     onSuccess: (res) => {
       //console.log(res);
@@ -119,6 +136,13 @@ export default function LoginPage() {
             Don't have an account?{" "}
             <span className="text-green-500 cursor-pointer hover:text-green-700">
               <Link to={"/register"}>Register Now</Link>
+            </span>
+          </p>
+          {/* forget password */}
+          <p className="text-gray-600 text-center m-[10px]">
+            Forget Your Password?{" "}
+            <span className="text-green-500 cursor-pointer hover:text-green-700">
+              <Link to={"/forget"}>Reset Password</Link>
             </span>
           </p>
         </div>

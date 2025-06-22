@@ -3,6 +3,7 @@ import ProductPage from "../pages/client/productPage";
 import { BsCart4 } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
+import UserData from "./userData";
 
 // import "./header.css"
 export default function Header() {
@@ -23,6 +24,9 @@ export default function Header() {
         <Link to="/reviews">
           <h1>Reviews</h1>
         </Link>
+        <div className="absolute right-[70px]">
+          <UserData />
+        </div>
         <Link to="/cart" className="absolute right-[30px] text-2xl">
           <BsCart4 />
         </Link>
