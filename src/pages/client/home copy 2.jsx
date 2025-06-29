@@ -4,12 +4,6 @@ import { FaStar } from "react-icons/fa";
 
 export default function HomePageDesign() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [error, setError] = useState(null);
-
   const slides = [
     "/images/banner1.jpg",
     "/images/banner2.jpg",
@@ -22,86 +16,6 @@ export default function HomePageDesign() {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/categories`);
-        if (!res.ok) throw new Error("Failed to fetch categories");
-        const data = await res.json();
-        setCategories(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoadingCategories(false);
-      }
-    }
-
-    async function fetchProducts() {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product`);
-        if (!res.ok) throw new Error("Failed to fetch products");
-        const data = await res.json();
-        setProducts(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoadingProducts(false);
-      }
-    }
-
-    fetchCategories();
-    fetchProducts();
-  }, []);
-
-  if (loadingCategories || loadingProducts) {
-    return (
-      <div className="flex justify-center items-center h-screen text-[#802549] font-semibold text-xl">
-        Loading...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen text-red-600 font-semibold text-xl">
-        {error}
-      </div>
-    );
-  }
-
-  // Filter products by flags
-  const trendingProducts = products.filter((p) => p.isTrending);
-  const featuredProducts = products.filter((p) => p.isFeatured);
-  // You can rename or remove this if you want Best Sellers to be something else
-  const bestSellers = products;
-
-  const renderProductCard = (p) => (
-    <div
-      key={p.productId}
-      className="bg-white rounded-xl shadow hover:shadow-lg transition border"
-    >
-      <img
-        src={p.images?.[0] || "/images/default-product.jpg"}
-        alt={p.name}
-        className="w-full h-60 object-cover rounded-t-xl"
-      />
-      <div className="p-4">
-        <h3 className="font-semibold mb-1">{p.name}</h3>
-        <div className="flex items-center text-yellow-400 mb-2">
-          {Array(5)
-            .fill(0)
-            .map((_, i) => (
-              <FaStar key={i} color={i < (p.rating || 5) ? "#facc15" : "#ddd"} />
-            ))}
-        </div>
-        <p className="text-pink-700 font-bold">${p.price.toFixed(2)}</p>
-        <p className="text-sm text-gray-500 mt-1">
-          Category: {categories.find((c) => c.categoryId === p.categoryId)?.name || "Unknown"}
-        </p>
-      </div>
-    </div>
-  );
 
   return (
     <div className="w-full font-sans text-[#802549]">
@@ -132,57 +46,53 @@ export default function HomePageDesign() {
       <section className="py-16 px-6 md:px-12 bg-[#fdf6f0]">
         <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {categories.map((cat) => (
+          {["Skincare", "Makeup", "Haircare"].map((category, i) => (
             <Link
-              to={`/products?category=${cat.name.toLowerCase()}`}
-              key={cat.categoryId}
+              to={`/products?category=${category.toLowerCase()}`}
+              key={i}
               className="bg-white border rounded-xl shadow hover:shadow-lg transition overflow-hidden"
             >
               <img
-                src={cat.image || "/images/default-category.jpg"}
-                alt={cat.name}
+                src={`/images/category-${i + 1}.jpg`}
+                alt={category}
                 className="w-full h-60 object-cover"
               />
-              <div className="p-4 text-center font-semibold text-lg">{cat.name}</div>
+              <div className="p-4 text-center font-semibold text-lg">
+                {category}
+              </div>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Trending Products */}
-      <section className="py-16 px-6 md:px-12 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-12">Trending Products</h2>
-        {trendingProducts.length === 0 ? (
-          <p className="text-center text-gray-500">No trending products available.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {trendingProducts.map(renderProductCard)}
-          </div>
-        )}
-      </section>
-
-      {/* Featured Products */}
-      <section className="py-16 px-6 md:px-12 bg-[#fdf6f0]">
-        <h2 className="text-3xl font-bold text-center mb-12">Featured Products</h2>
-        {featuredProducts.length === 0 ? (
-          <p className="text-center text-gray-500">No featured products available.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {featuredProducts.map(renderProductCard)}
-          </div>
-        )}
-      </section>
-
-      {/* Best Sellers */}
+      {/* Best Selling Products */}
       <section className="py-16 px-6 md:px-12 bg-white">
         <h2 className="text-3xl font-bold text-center mb-12">Best Sellers</h2>
-        {bestSellers.length === 0 ? (
-          <p className="text-center text-gray-500">No best sellers available.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {bestSellers.map(renderProductCard)}
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+          {[1, 2, 3, 4].map((p) => (
+            <div
+              key={p}
+              className="bg-white rounded-xl shadow hover:shadow-lg transition border"
+            >
+              <img
+                src={`/images/product-${p}.jpg`}
+                alt="Product"
+                className="w-full h-60 object-cover rounded-t-xl"
+              />
+              <div className="p-4">
+                <h3 className="font-semibold mb-1">Beauty Product {p}</h3>
+                <div className="flex items-center text-yellow-400 mb-2">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, i) => (
+                      <FaStar key={i} />
+                    ))}
+                </div>
+                <p className="text-pink-700 font-bold">$19.99</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Testimonials */}

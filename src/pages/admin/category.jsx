@@ -1,65 +1,54 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {
-  FaSearch,
-  FaSortAmountDown,
-  FaSortAmountUp,
-  FaRegTrashAlt,
-} from "react-icons/fa";
-import { FaPlus } from "react-icons/fa6";
-import { GrEdit } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
+import { FaRegTrashAlt, FaSearch, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import { GrEdit } from "react-icons/gr";
 import toast from "react-hot-toast";
 import Loader from "../../components/loader";
+import { FaPlus } from "react-icons/fa6";
 
-export default function AdminProductsPage() {
-  const [products, setProducts] = useState([]);
+
+export default function AdminCategoryPage() {
+  const [categories, setCategories] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [confirmDialog, setConfirmDialog] = useState({
-    isOpen: false,
-    message: "",
-    onConfirm: null,
-  });
-  const productsPerPage = 10;
-
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, message: "", onConfirm: null });
+  const categoriesPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loaded) {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "/api/product")
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/categories")
         .then((res) => {
-          setProducts(res.data);
+          setCategories(res.data);
           setLoaded(true);
         })
-        .catch(() => toast.error("Failed to fetch products"));
+        .catch(() => toast.error("Failed to fetch categories"));
     }
   }, [loaded]);
 
-  async function confirmAndDelete(productId) {
+  async function confirmAndDelete(id) {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Please login to delete product");
+      toast.error("Please login to delete category");
       return;
     }
+
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/api/product/${productId}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
-      toast.success("Product deleted successfully");
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/categories/${id}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
       setLoaded(false);
+      toast.success("Category deleted successfully");
     } catch (err) {
       console.log(err);
-      toast.error("Failed to delete product");
+      toast.error("Failed to delete category");
     }
   }
 
@@ -72,11 +61,11 @@ export default function AdminProductsPage() {
     }
   }
 
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const sortedCategories = [...filteredCategories].sort((a, b) => {
     if (!sortBy) return 0;
     const aVal = a[sortBy];
     const bVal = b[sortBy];
@@ -88,32 +77,19 @@ export default function AdminProductsPage() {
     return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
   });
 
-  const indexOfLast = currentPage * productsPerPage;
-  const indexOfFirst = indexOfLast - productsPerPage;
-  const currentProducts = sortedProducts.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  const indexOfLast = currentPage * categoriesPerPage;
+  const indexOfFirst = indexOfLast - categoriesPerPage;
+  const currentCategories = sortedCategories.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(sortedCategories.length / categoriesPerPage);
 
   return (
     <div className="w-full h-full p-4 overflow-auto relative">
-      {/* <Link
-        to="/admin/addProduct"
-        className="absolute bottom-[5px] right-[5px] text-white bg-green-500 p-[12px] text-3xl rounded-full cursor-pointer hover:bg-gray-700 hover:text-green-500"
-      >
-        <FaPlus />
-      </Link> */}
-      <Link
-        to="/admin/addProduct"
-        className="fixed bottom-15 right-10 z-50 text-white bg-green-500 p-[12px] text-3xl rounded-full cursor-pointer hover:bg-gray-700 hover:text-green-500 shadow-lg"
-      >
-        <FaPlus />
-      </Link>
-
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold">All Products</h1>
-        <span className="text-sm text-gray-600">Total: {products.length}</span>
+        <h1 className="text-2xl font-semibold">All Categories</h1>
+        <span className="text-sm text-gray-600">Total: {categories.length}</span>
       </div>
 
-      {/* Search & Sort */}
+      {/* Filters */}
       <div className="flex flex-wrap items-center gap-4 mb-4">
         <div className="relative w-72">
           <input
@@ -132,18 +108,12 @@ export default function AdminProductsPage() {
           className="px-3 py-2 border rounded shadow-sm"
         >
           <option value="">Sort By</option>
-          <option value="price">Price</option>
-          <option value="labeledPrice">Labeled Price</option>
-          <option value="stock">Stock</option>
+          <option value="name">Name</option>
         </select>
 
         {sortBy && (
           <div className="text-gray-500">
-            {sortOrder === "asc" ? (
-              <FaSortAmountDown title="Ascending" />
-            ) : (
-              <FaSortAmountUp title="Descending" />
-            )}
+            {sortOrder === "asc" ? <FaSortAmountDown /> : <FaSortAmountUp />}
           </div>
         )}
       </div>
@@ -156,46 +126,39 @@ export default function AdminProductsPage() {
                 <tr>
                   <th className="p-3 text-left">ID</th>
                   <th className="p-3 text-left">Name</th>
-                  <th className="p-3 text-left">Price</th>
-                  <th className="p-3 text-left">Labeled Price</th>
-                  <th className="p-3 text-left">Stock</th>
+                  <th className="p-3 text-left">Image</th>
+                  <th className="p-3 text-left">Description</th>
                   <th className="p-3 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {currentProducts.map((product, index) => (
-                  <tr
-                    key={index}
-                    className="border-b hover:bg-[#fdf6f0] transition text-center"
-                  >
-                    <td className="p-3">{product.productId}</td>
-                    <td className="p-3">{product.name}</td>
-                    <td className="p-3">{product.price.toFixed(2)}</td>
-                    <td className="p-3">{product.labeledPrice.toFixed(2)}</td>
-                    <td className="p-3">{product.stock}</td>
+                {currentCategories.map((category, index) => (
+                  <tr key={index} className="border-b hover:bg-[#fdf6f0] transition">
+                    <td className="p-3">{category.categoryId}</td>
+                    <td className="p-3">{category.name}</td>
                     <td className="p-3">
-                      <div className="flex justify-center gap-3">
+                      <img
+                        src={category.image}
+                        alt="category"
+                        className="w-[60px] h-[40px] object-cover rounded-md"
+                      />
+                    </td>
+                    <td className="p-3">{category.description}</td>
+                    <td className="p-3">
+                      <div className="flex gap-3">
                         <FaRegTrashAlt
                           onClick={() =>
                             setConfirmDialog({
                               isOpen: true,
-                              message:
-                                "Are you sure you want to delete this product?",
-                              onConfirm: () =>
-                                confirmAndDelete(product.productId),
+                              message: `Are you sure you want to delete this category?`,
+                              onConfirm: () => confirmAndDelete(category.categoryId),
                             })
                           }
-                          className="text-[20px] hover:text-red-600 cursor-pointer"
+                          className="text-[18px] text-gray-600 hover:text-red-600 cursor-pointer"
                         />
-                        {/* <GrEdit
-                          onClick={() => navigate("/admin/editProduct", { state: product })}
-                          className="text-[20px] hover:text-blue-600 cursor-pointer"
-                        /> */}
                         <GrEdit
-                          onClick={() => {
-                            navigate("/admin/editProduct", { state: product });
-                          }}
-                          className="text-[20px] hover:text-blue-600 cursor-pointer"
+                          onClick={() => navigate("/admin/editCategory", { state: category })}
+                          className="text-[18px] text-gray-600 hover:text-blue-600 cursor-pointer"
                         />
                       </div>
                     </td>
@@ -218,9 +181,7 @@ export default function AdminProductsPage() {
               Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50"
             >
@@ -232,6 +193,21 @@ export default function AdminProductsPage() {
         <Loader />
       )}
 
+      {/* Floating Add Button */}
+      {/* <Link
+        to="/admin/addCategory"
+        className="absolute bottom-5 right-5 text-white bg-green-500 p-[12px] text-3xl rounded-full cursor-pointer hover:bg-gray-700 hover:text-green-400"
+      >
+        <FaPlus />
+      </Link> */}
+
+            <Link
+        to="/admin/addCategory"
+        className="fixed bottom-15 right-10 z-50 text-white bg-green-500 p-[12px] text-3xl rounded-full cursor-pointer hover:bg-gray-700 hover:text-green-500 shadow-lg"
+      >
+        <FaPlus />
+      </Link>
+
       {/* Custom Confirmation Modal */}
       {confirmDialog.isOpen && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -241,24 +217,14 @@ export default function AdminProductsPage() {
               <button
                 onClick={() => {
                   confirmDialog.onConfirm();
-                  setConfirmDialog({
-                    isOpen: false,
-                    message: "",
-                    onConfirm: null,
-                  });
+                  setConfirmDialog({ isOpen: false, message: "", onConfirm: null });
                 }}
                 className="px-4 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
               >
                 Confirm
               </button>
               <button
-                onClick={() =>
-                  setConfirmDialog({
-                    isOpen: false,
-                    message: "",
-                    onConfirm: null,
-                  })
-                }
+                onClick={() => setConfirmDialog({ isOpen: false, message: "", onConfirm: null })}
                 className="px-4 py-1 text-sm bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
               >
                 Cancel

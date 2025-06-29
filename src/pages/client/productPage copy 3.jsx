@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ProductCard from "../../components/product-card";
 import Loader from "../../components/loader";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
@@ -73,11 +73,11 @@ export default function ProductPage() {
   }, [products, categoryFilter, sortOption, visibleCount]);
 
   return (
-    <div className="min-h-screen w-full px-4 pt-28 pb-16 font-sans bg-[#fdf6f0] text-[#802549]">
+    <div className="min-h-screen w-full px-4 pt-28 pb-16 font-sans text-[#802549]">
       {/* Filters & Search */}
       <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
         {/* Search */}
-        <div className="flex items-center border border-gray-300 rounded-full px-4 w-full max-w-md bg-white shadow-sm">
+        <div className="flex items-center border border-gray-300 rounded-full px-4 w-full max-w-md">
           <FaSearch className="mr-2" />
           <input
             type="text"
@@ -130,7 +130,7 @@ export default function ProductPage() {
         </select>
       </div>
 
-      {/* Product Grid */}
+      {/* Products Grid */}
       {loading ? (
         <Loader />
       ) : displayedProducts.length === 0 ? (
@@ -138,11 +138,7 @@ export default function ProductPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {displayedProducts.map((product) => (
-            <div
-              key={product.productId}
-              className="relative shadow-md  overflow-hidden rounded-xl bg-white transition hover:shadow-lg "
-              // className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
-            >
+            <div key={product.productId} className="relative">
               {/* Badge */}
               {product.isFeatured && (
                 <span className="absolute top-2 right-2 bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded-full z-10">

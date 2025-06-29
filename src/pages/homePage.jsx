@@ -4,7 +4,7 @@ import ProductPage from "./client/productPage";
 import ProductOverview from "./client/productOverview";
 import CartPage from "./client/cart";
 import CheckoutPage from "./client/checkout";
-
+import HomePageDesign from "./client/home";
 
 export default function HomePage() {
   return (
@@ -12,11 +12,11 @@ export default function HomePage() {
       <Header />
       <div className="w-full h-[calc(100%-70px)] min-h-[calc(100%-70px)]">
         <Routes path="/*">
-          <Route path="/" element={<HomePage />} />
-           <Route path="/products" element={<ProductPage />} />
-           <Route path="/overview/:id" element={<ProductOverview />} />
-           <Route path="/cart" element={<CartPage />} />
-           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/" element={<HomePageDesign />} />
+          <Route path="/products" element={<ProductPage />} />
+          <Route path="/overview/:id" element={<ProductOverview />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>

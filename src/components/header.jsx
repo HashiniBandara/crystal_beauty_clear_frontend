@@ -1,61 +1,63 @@
 import { Link } from "react-router-dom";
-import ProductPage from "../pages/client/productPage";
 import { BsCart4 } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
 import UserData from "./userData";
 
-// import "./header.css"
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <header className="w-full h-[70px] flex justify-start lg:justify-center items-center bg-gray-100 relative">
-      <GiHamburgerMenu className="lg:hidden text-3xl absolute left-[30px] text-accent" onClick={() => setIsOpen(true)}/>
-      <div className="w-[500px] h-full hidden lg:flex justify-evenly items-center text-xl text-pink-400">
-        <Link to="/">
-          <h1>Home</h1>
+    <header className="w-full bg-white shadow fixed top-0 z-50">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-3 lg:py-4">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold tracking-wide text-[#802549]">
+          Cristal Beauty Clear
         </Link>
-        <Link to="/products" element={<ProductPage />}>
-          <h1>Products</h1>
-        </Link>
-        <Link to="/contact">
-          <h1>Contact</h1>
-        </Link>
-        <Link to="/reviews">
-          <h1>Reviews</h1>
-        </Link>
-        <div className="absolute right-[70px]">
+
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center space-x-8 text-[#802549] text-base font-medium">
+          <Link to="/" className="hover:text-pink-700 transition">Home</Link>
+          <Link to="/products" className="hover:text-pink-700 transition">Products</Link>
+          <Link to="/contact" className="hover:text-pink-700 transition">Contact</Link>
+          <Link to="/reviews" className="hover:text-pink-700 transition">Reviews</Link>
+        </nav>
+
+        {/* Right Actions */}
+        <div className="flex items-center space-x-5">
           <UserData />
+          <Link to="/cart" className="text-2xl text-[#802549] hover:text-pink-700 transition">
+            <BsCart4 />
+          </Link>
+          <button className="lg:hidden text-3xl text-[#802549]" onClick={() => setIsOpen(true)}>
+            <GiHamburgerMenu />
+          </button>
         </div>
-        <Link to="/cart" className="absolute right-[30px] text-2xl">
-          <BsCart4 />
-        </Link>
       </div>
+
+      {/* Mobile Sidebar */}
       {isOpen && (
-        <div className="fixed lg:hidden top-0 left-0 w-full h-screen bg-[#00000060] flex z-10">
-          <div className="w-[300px] bg-white h-full flex justify-start">
-            <GiHamburgerMenu
-              className="text-3xl absolute left-[30px] text-accent my-4 cursor-pointer"
-              onClick={() => setIsOpen(false)}
-            /> 
-            <div className="w-[500px] h-full flex flex-col items-left pl-[30px] pt-[50px] gap-4 text-xl text-accent">
-              <Link to="/">
-                <h1>Home</h1>
-              </Link>
-              <Link to="/products" element={<ProductPage />}>
-                <h1>Products</h1>
-              </Link>
-              <Link to="/contact">
-                <h1>Contact</h1>
-              </Link>
-              <Link to="/reviews">
-                <h1>Reviews</h1>
-              </Link>
-              <Link to="/cart" >
-                <BsCart4 />
-              </Link>
+        <div className="fixed inset-0 z-50 flex">
+          {/* Sidebar */}
+          <div className="w-64 bg-white p-6 space-y-6 shadow-lg">
+            <div className="flex justify-between items-center border-b pb-3">
+              <span className="text-xl font-bold text-[#802549]">Menu</span>
+              <button onClick={() => setIsOpen(false)} className="text-2xl text-pink-600">&times;</button>
             </div>
+            <nav className="flex flex-col space-y-4 text-[#802549] font-medium">
+              <Link to="/" onClick={() => setIsOpen(false)} className="hover:text-pink-700 transition">Home</Link>
+              <Link to="/products" onClick={() => setIsOpen(false)} className="hover:text-pink-700 transition">Products</Link>
+              <Link to="/contact" onClick={() => setIsOpen(false)} className="hover:text-pink-700 transition">Contact</Link>
+              <Link to="/reviews" onClick={() => setIsOpen(false)} className="hover:text-pink-700 transition">Reviews</Link>
+              <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 hover:text-pink-700 transition">
+                <BsCart4 />
+                <span>Cart</span>
+              </Link>
+            </nav>
           </div>
+
+          {/* Overlay */}
+          <div className="flex-1 bg-black/30" onClick={() => setIsOpen(false)} />
         </div>
       )}
     </header>

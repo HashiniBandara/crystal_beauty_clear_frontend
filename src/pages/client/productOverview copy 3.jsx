@@ -4,6 +4,7 @@ import Loader from "../../components/loader";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import ImageSlider from "../../components/imageSlider";
+import ProductCard from "../../components/product-card";
 import getCart, { addToCart } from "../../utils/cart";
 
 export default function ProductOverview() {
@@ -20,31 +21,6 @@ export default function ProductOverview() {
   const token = localStorage.getItem("token");
   const isAdmin =
     token && JSON.parse(atob(token.split(".")[1])).role === "admin";
-
-  // Minimal inline ProductCard component to display related products
-  function ProductCard({ product }) {
-    return (
-      <div
-        onClick={() => navigate(`/product/${product.productId}`)}
-        className="cursor-pointer flex flex-col bg-white rounded-xl shadow-md hover:shadow-lg transition p-4"
-        title={product.name}
-      >
-        <div className="w-full aspect-[4/3] overflow-hidden rounded-lg mb-3">
-          <img
-            src={product.images?.[0] || ""}
-            alt={product.name}
-            className="object-cover w-full h-full transition-transform hover:scale-105"
-          />
-        </div>
-        <h3 className="font-semibold text-lg text-[#802549] mb-1 truncate">
-          {product.name}
-        </h3>
-        <p className="text-pink-800 font-semibold">
-          LKR {product.price.toFixed(2)}
-        </p>
-      </div>
-    );
-  }
 
   useEffect(() => {
     if (status === "loading") {
@@ -67,21 +43,18 @@ export default function ProductOverview() {
     }
   }, [status, id]);
 
+  // Fetch related products by category
   useEffect(() => {
     if (product?.categoryId) {
       axios
-        .get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/product/category/${
-            product.categoryId
-          }`
-        )
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/product/category/${product.categoryId}`)
         .then((res) => {
-          const related = res.data.filter(
-            (p) => p.productId !== product.productId
-          );
+          // exclude current product from related list
+          const related = res.data.filter(p => p.productId !== product.productId);
           setRelatedProducts(related.slice(0, 4));
         })
         .catch(() => {
+          // silently fail for related products
           setRelatedProducts([]);
         });
     }
@@ -92,23 +65,19 @@ export default function ProductOverview() {
       toast.error("Login to post review");
       return;
     }
-    const decoded = JSON.parse(atob(token.split(".")[1]));
+    const decoded = JSON.parse(atob(token.split('.')[1]));
     const userName = decoded.firstName + " " + decoded.lastName;
     const userEmail = decoded.email;
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/review`,
-        {
-          productId: id,
-          userEmail,
-          userName,
-          rating,
-          comment,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/review`, {
+        productId: id,
+        userEmail,
+        userName,
+        rating,
+        comment,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       toast.success("Review submitted");
       setRating(5);
       setComment("");
@@ -139,24 +108,17 @@ export default function ProductOverview() {
   };
 
   if (status === "loading") return <Loader />;
-  if (status === "error")
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-600 text-xl font-semibold">
-        Product Not Found
-      </div>
-    );
+  if (status === "error") return (
+    <div className="flex justify-center items-center min-h-screen text-red-600 text-xl font-semibold">
+      Product Not Found
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[#fdf6f0] text-[#802549] font-sans px-4 py-8 lg:px-20 lg:py-12">
-      {/* Add top margin to separate from header */}
-      <div className="mb-12" />
-
       {/* Product Details */}
       <div className="flex flex-col lg:flex-row gap-12 bg-white rounded-xl shadow-lg p-8">
-        <div className="lg:w-1/2 rounded-lg overflow-hidden hidden lg:block">
-          <ImageSlider images={product.images} />
-        </div>
-        <div className="w-full lg:w-[50%] lg:h-full lg:hidden mb-10">
+        <div className="lg:w-1/2 rounded-lg overflow-hidden">
           <ImageSlider images={product.images} />
         </div>
         <div className="lg:w-1/2 flex flex-col justify-between">
@@ -177,9 +139,7 @@ export default function ProductOverview() {
                 </span>
               )}
             </div>
-            <p className="text-gray-700 leading-relaxed">
-              {product.description}
-            </p>
+            <p className="text-gray-700 leading-relaxed">{product.description}</p>
           </div>
           <div className="mt-8 flex gap-6">
             <button
@@ -241,9 +201,7 @@ export default function ProductOverview() {
                         {r.userName?.[0] || "U"}
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-800">
-                          {r.userName}
-                        </div>
+                        <div className="font-semibold text-gray-800">{r.userName}</div>
                         <div className="text-xs text-gray-400">
                           {new Date(r.createdAt).toLocaleDateString()}
                         </div>
@@ -314,8 +272,8 @@ export default function ProductOverview() {
               </div>
 
               <p className="text-sm text-gray-500 italic mb-6 text-center">
-                Your email will <strong>not</strong> be shown publicly. It's
-                only used for verification.
+                Your email will <strong>not</strong> be shown publicly. It's only
+                used for verification.
               </p>
 
               {/* Rating Selector */}
@@ -378,7 +336,12 @@ export default function ProductOverview() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {relatedProducts.map((rp) => (
-              <ProductCard key={rp.productId} product={rp} />
+              <div
+                key={rp.productId}
+                className="relative shadow-md rounded-xl overflow-hidden bg-white transition hover:shadow-lg"
+              >
+                <ProductCard product={rp} />
+              </div>
             ))}
           </div>
         </section>
