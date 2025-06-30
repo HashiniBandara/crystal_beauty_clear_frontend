@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaUserEdit } from "react-icons/fa";
+import {
+  FaUserCircle,
+  FaSignOutAlt,
+  FaSignInAlt,
+  FaUserPlus,
+  FaUserEdit,
+} from "react-icons/fa";
 
 export default function UserData() {
   const [user, setUser] = useState(null);
@@ -32,7 +38,9 @@ export default function UserData() {
             title="Account Menu"
           >
             <FaUserCircle className="text-xl" />
-            <span className="hidden md:inline">{user.name || "My Account"}</span>
+            <span className="hidden md:inline">
+              {user.name || "My Account"}
+            </span>
           </button>
 
           {/* {openMenu && (
@@ -53,15 +61,39 @@ export default function UserData() {
               </button>
             </div>
           )} */}
+          {/* {openMenu && (
+            <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg w-44 z-50">
+              <Link
+                to="/profile"
+                className={linkStyle}
+                onClick={() => setOpenMenu(false)}
+              >
+                <FaUserEdit className="text-pink-600" />
+                Profile
+              </Link>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  setUser(null);
+                  setOpenMenu(false);
+                  window.location.href = "/login";
+                }}
+                className={`${linkStyle} w-full text-left`}
+              >
+                <FaSignOutAlt className="text-pink-600" />
+                Logout
+              </button>
+            </div>
+          )} */}
           {openMenu && (
   <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg w-44 z-50">
     <Link
-      to="/profile"
+      to={user?.role === "admin" ? "/admin" : "/profile"}
       className={linkStyle}
       onClick={() => setOpenMenu(false)}
     >
       <FaUserEdit className="text-pink-600" />
-      Profile
+      {user?.role === "admin" ? "Admin Panel" : "Profile"}
     </Link>
     <button
       onClick={() => {
@@ -77,14 +109,21 @@ export default function UserData() {
     </button>
   </div>
 )}
+
         </div>
       ) : (
         <div className="flex items-center space-x-3">
-          <Link to="/login" className="text-red-700 hover:text-red-800 flex items-center gap-1">
+          <Link
+            to="/login"
+            className="text-red-700 hover:text-red-800 flex items-center gap-1"
+          >
             <FaSignInAlt />
             <span className="hidden md:inline">Login</span>
           </Link>
-          <Link to="/register" className="text-red-700 hover:text-red-800 flex items-center gap-1">
+          <Link
+            to="/register"
+            className="text-red-700 hover:text-red-800 flex items-center gap-1"
+          >
             <FaUserPlus />
             <span className="hidden md:inline">Register</span>
           </Link>

@@ -230,7 +230,7 @@ export default function AdminOrdersPage() {
 
       {/* Modal */}
       {modalIsDisplaying && (
-            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[#00000080]">
+            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[#00000080] z-20">
               <div className="w-[600px] h-[600px] bg-white max-w-[600px] max-h-[600px] relative">
                 <div className="w-full h-[150px] ">
                   <div className="w-full h-[50px] bg-[#802549] flex items-center justify-center text-white text-lg">
