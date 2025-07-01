@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import ImageSlider from "../../components/imageSlider";
 import getCart, { addToCart } from "../../utils/cart";
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 export default function ProductOverview() {
   const { id } = useParams();
@@ -19,8 +18,10 @@ export default function ProductOverview() {
   const [comment, setComment] = useState("");
   const [status, setStatus] = useState("loading");
   const token = localStorage.getItem("token");
-  const isAdmin = token && JSON.parse(atob(token.split(".")[1])).role === "admin";
+  const isAdmin =
+    token && JSON.parse(atob(token.split(".")[1])).role === "admin";
 
+  // Minimal inline ProductCard component to display related products
   function ProductCard({ product }) {
     return (
       <div
@@ -35,21 +36,15 @@ export default function ProductOverview() {
             className="object-cover w-full h-full transition-transform hover:scale-105"
           />
         </div>
-        <h3 className="font-semibold text-lg text-[#802549] mb-1 truncate">{product.name}</h3>
-        <p className="text-pink-800 font-semibold">LKR {product.price.toFixed(2)}</p>
+        <h3 className="font-semibold text-lg text-[#802549] mb-1 truncate">
+          {product.name}
+        </h3>
+        <p className="text-pink-800 font-semibold">
+          LKR {product.price.toFixed(2)}
+        </p>
       </div>
     );
   }
-
-  const renderStars = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      if (rating >= i) stars.push(<FaStar key={i} className="text-yellow-400" />);
-      else if (rating >= i - 0.5) stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />);
-      else stars.push(<FaRegStar key={i} className="text-yellow-400" />);
-    }
-    return <div className="flex gap-1 mt-2">{stars}</div>;
-  };
 
   useEffect(() => {
     if (status === "loading") {
@@ -57,7 +52,9 @@ export default function ProductOverview() {
         .get(`${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`)
         .then((res) => {
           setProduct(res.data.product);
-          return axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/review/product/${id}`);
+          return axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}/api/review/product/${id}`
+          );
         })
         .then((res) => {
           setReviews(res.data);
@@ -73,9 +70,15 @@ export default function ProductOverview() {
   useEffect(() => {
     if (product?.categoryId) {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/product/category/${product.categoryId}`)
+        .get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/product/category/${
+            product.categoryId
+          }`
+        )
         .then((res) => {
-          const related = res.data.filter((p) => p.productId !== product.productId);
+          const related = res.data.filter(
+            (p) => p.productId !== product.productId
+          );
           setRelatedProducts(related.slice(0, 4));
         })
         .catch(() => {
@@ -143,18 +146,17 @@ export default function ProductOverview() {
       </div>
     );
 
-  const averageRating =
-    reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
-
   return (
     <div className="min-h-screen bg-[#fdf6f0] text-[#802549] font-sans px-4 py-8 lg:px-20 lg:py-12">
+      {/* Add top margin to separate from header */}
       <div className="mb-12" />
 
+      {/* Product Details */}
       <div className="flex flex-col lg:flex-row gap-12 bg-white rounded-xl shadow-lg p-8">
         <div className="lg:w-1/2 rounded-lg overflow-hidden hidden lg:block">
           <ImageSlider images={product.images} />
         </div>
-        <div className="w-full lg:w-[50%] lg:hidden mb-10">
+        <div className="w-full lg:w-[50%] lg:h-full lg:hidden mb-10">
           <ImageSlider images={product.images} />
         </div>
         <div className="lg:w-1/2 flex flex-col justify-between">
@@ -165,7 +167,7 @@ export default function ProductOverview() {
                 | {product.altName.join(" | ")}
               </span>
             </h1>
-            <div className="flex items-center gap-6 mb-2">
+            <div className="flex items-center gap-6 mb-6">
               <span className="text-3xl font-semibold">
                 LKR {product.price.toFixed(2)}
               </span>
@@ -175,10 +177,10 @@ export default function ProductOverview() {
                 </span>
               )}
             </div>
-            {reviews.length > 0 && renderStars(averageRating)}
-            <p className="text-gray-700 leading-relaxed mt-4">{product.description}</p>
+            <p className="text-gray-700 leading-relaxed">
+              {product.description}
+            </p>
           </div>
-
           <div className="mt-8 flex gap-6">
             <button
               onClick={() => {

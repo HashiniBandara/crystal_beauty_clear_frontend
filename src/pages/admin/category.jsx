@@ -140,7 +140,7 @@ export default function AdminCategoryPage() {
                       <img
                         src={category.image}
                         alt="category"
-                        className="w-[60px] h-[40px] object-cover rounded-md"
+                        className="w-[60px] h-[60px] object-cover rounded-md"
                       />
                     </td>
                     <td className="p-3">{category.description}</td>
