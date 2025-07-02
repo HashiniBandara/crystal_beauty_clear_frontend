@@ -229,7 +229,7 @@ export default function AdminOrdersPage() {
       )}
 
       {/* Modal */}
-      {modalIsDisplaying && (
+      {/* {modalIsDisplaying && (
             <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[#00000080] z-20">
               <div className="w-[600px] h-[600px] bg-white max-w-[600px] max-h-[600px] relative">
                 <div className="w-full h-[150px] ">
@@ -287,7 +287,81 @@ export default function AdminOrdersPage() {
                 </button>
               </div>
             </div>
-          )}
+          )} */}
+
+import { IoCloseSharp } from "react-icons/io5";
+
+{modalIsDisplaying && (
+  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+    <div className="bg-white rounded-2xl shadow-xl w-full max-w-[600px] h-[90vh] relative ">
+
+      {/* Modal Header */}
+      <div className="w-full h-[50px] bg-[#802549] flex items-center justify-center rounded-t-2xl">
+        <h2 className="text-lg sm:text-xl font-semibold text-white">
+          Order #{displayingOrder.orderId} Details
+        </h2>
+      </div>
+
+      {/* Modal Content */}
+      <div className="p-5 space-y-4 overflow-y-auto max-h-[calc(90vh-50px)]">
+        
+        {/* Order Info */}
+        <div className="border-b border-gray-300 pb-4 flex flex-col sm:flex-row gap-6 text-sm sm:text-base text-gray-700">
+          <div className="flex-1 space-y-1">
+            <p><span className="font-semibold">Email:</span> {displayingOrder.email}</p>
+            <p><span className="font-semibold">Name:</span> {displayingOrder.name}</p>
+            <p><span className="font-semibold">Address:</span> {displayingOrder.address}</p>
+            <p><span className="font-semibold">Phone Number:</span> {displayingOrder.phoneNumber}</p>
+          </div>
+          <div className="flex-1 space-y-1">
+            <p><span className="font-semibold">Total:</span> LKR {displayingOrder.total.toFixed(2)}</p>
+            <p><span className="font-semibold">Date:</span> {new Date(displayingOrder.date).toDateString()}</p>
+            <p><span className="font-semibold">Status:</span> {displayingOrder.status}</p>
+          </div>
+        </div>
+
+        {/* Items */}
+        <div className="space-y-4">
+          {displayingOrder.billItems.map((item, index) => (
+            <div
+              key={index}
+              className="bg-[#fdf6f0] shadow rounded-lg flex gap-4 items-center p-4"
+            >
+              <img
+                src={item.image}
+                alt={item.productName}
+                className="w-[80px] h-[80px] object-cover rounded-md"
+              />
+              <div className="flex-1 overflow-hidden">
+                <h3 className="font-bold text-lg truncate">{item.productName}</h3>
+                <p className="text-gray-600 text-sm">LKR: {item.price.toFixed(2)}</p>
+                <p className="text-gray-600 text-sm">Quantity: {item.quantity}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Close Button */}
+      {/* <button
+        onClick={() => setModalIsDisplaying(false)}
+        className="w-[40px] h-[40px] rounded-full bg-[#fdf6f0] shadow shadow-black flex justify-center items-center absolute top-[-20px] right-[-20px]"
+      >
+        <IoCloseSharp size={20} />
+      </button> */}
+
+       {/* Close Icon Button */}
+            <button
+             onClick={() => setModalIsDisplaying(false)}
+              className="w-[40px] h-[40px] rounded-full bg-[#fdf6f0] shadow shadow-black flex justify-center items-center absolute top-[-20px] right-[-20px]"
+            >
+              <IoCloseSharp />
+            </button>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 }

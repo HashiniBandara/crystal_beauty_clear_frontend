@@ -2,7 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Loader from "../../components/loader";
-import { FaSearch, FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
+import {
+  FaRegStar,
+  FaSearch,
+  FaSortAmountDown,
+  FaSortAmountUp,
+  FaStar,
+} from "react-icons/fa";
+import { IoClose, IoCloseSharp } from "react-icons/io5";
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState([]);
@@ -11,7 +18,11 @@ export default function AdminReviewsPage() {
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, message: "", onConfirm: null });
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    message: "",
+    onConfirm: null,
+  });
   const [selectedReview, setSelectedReview] = useState(null); // Modal state
   const reviewsPerPage = 10;
 
@@ -40,11 +51,12 @@ export default function AdminReviewsPage() {
     }
   }
 
-  const filteredReviews = reviews.filter((r) =>
-    r.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.productId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.comment.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredReviews = reviews.filter(
+    (r) =>
+      r.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.productId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.comment.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedReviews = [...filteredReviews].sort((a, b) => {
@@ -59,17 +71,24 @@ export default function AdminReviewsPage() {
   });
 
   const indexOfLast = currentPage * reviewsPerPage;
-  const currentReviews = sortedReviews.slice(indexOfLast - reviewsPerPage, indexOfLast);
+  const currentReviews = sortedReviews.slice(
+    indexOfLast - reviewsPerPage,
+    indexOfLast
+  );
   const totalPages = Math.ceil(sortedReviews.length / reviewsPerPage);
 
   async function toggleBlock(reviewId, block) {
     try {
-      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/review/block`, {
-        reviewId,
-        isBlocked: block,
-      }, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-      });
+      await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/review/block`,
+        {
+          reviewId,
+          isBlocked: block,
+        },
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
       toast.success(`Review ${block ? "blocked" : "unblocked"} successfully`);
       setLoaded(false);
     } catch {
@@ -132,8 +151,8 @@ export default function AdminReviewsPage() {
             <table className="w-full min-w-[900px]">
               <thead className="bg-[#802549] text-white">
                 <tr>
-                  <th className="p-3 text-left">User</th>
-                  <th className="p-3 text-left">Email</th>
+                  {/* <th className="p-3 text-left">User</th> */}
+                  <th className="p-3 text-left">User Email</th>
                   <th className="p-3 text-left">Product ID</th>
                   <th className="p-3 text-left">Rating</th>
                   <th className="p-3 text-left">Comment</th>
@@ -144,21 +163,37 @@ export default function AdminReviewsPage() {
               </thead>
               <tbody>
                 {currentReviews.map((r, i) => (
-                  <tr key={i} className="border-b hover:bg-[#fdf6f0] transition">
-                    <td className="p-3 capitalize">{r.userName}</td>
+                  <tr
+                    key={i}
+                    className="border-b hover:bg-[#fdf6f0] transition"
+                  >
+                    {/* <td className="p-3 capitalize">{r.userName}</td> */}
                     <td className="p-3 text-gray-500">{r.userEmail}</td>
                     <td className="p-3 text-gray-600">{r.productId}</td>
-                    <td className="p-3 text-yellow-500">{Array(r.rating).fill("★").join("")}</td>
-                    <td className="p-3 text-gray-700 max-w-[300px] truncate">{r.comment}</td>
+                    <td className="p-3 text-yellow-500">
+                      {Array(r.rating).fill("★").join("")}
+                    </td>
+                    <td className="p-3 text-gray-700 max-w-[300px] truncate">
+                      {/* View button */}
+                      <button
+                        onClick={() => handleViewClick(r)}
+                        className="ml-2 px-4 py-1 text-sm rounded bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        View
+                      </button>
+                      {/* {r.comment} */}
+                    </td>
                     <td className="p-3 text-sm text-gray-400">
                       {new Date(r.createdAt).toLocaleDateString()}
                     </td>
                     <td className="p-3">
-                      <span className={`px-2 py-1 text-sm rounded-full font-medium ${
-                        r.isBlocked
-                          ? "bg-red-100 text-red-600"
-                          : "bg-green-100 text-green-600"
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-sm rounded-full font-medium ${
+                          r.isBlocked
+                            ? "bg-red-100 text-red-600"
+                            : "bg-green-100 text-green-600"
+                        }`}
+                      >
                         {r.isBlocked ? "Blocked" : "Active"}
                       </span>
                     </td>
@@ -167,8 +202,11 @@ export default function AdminReviewsPage() {
                         onClick={() =>
                           setConfirmDialog({
                             isOpen: true,
-                            message: `Are you sure you want to ${r.isBlocked ? "unblock" : "block"} this review?`,
-                            onConfirm: () => toggleBlock(r.reviewId, !r.isBlocked),
+                            message: `Are you sure you want to ${
+                              r.isBlocked ? "unblock" : "block"
+                            } this review?`,
+                            onConfirm: () =>
+                              toggleBlock(r.reviewId, !r.isBlocked),
                           })
                         }
                         className={`px-4 py-1 text-sm rounded text-white transition ${
@@ -178,14 +216,6 @@ export default function AdminReviewsPage() {
                         }`}
                       >
                         {r.isBlocked ? "Unblock" : "Block"}
-                      </button>
-
-                      {/* View button */}
-                      <button
-                        onClick={() => handleViewClick(r)}
-                        className="ml-2 px-4 py-1 text-sm rounded bg-blue-500 hover:bg-blue-600 text-white"
-                      >
-                        View
                       </button>
                     </td>
                   </tr>
@@ -207,7 +237,9 @@ export default function AdminReviewsPage() {
               Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
               className="px-3 py-1 rounded bg-gray-300 text-sm hover:bg-gray-400 disabled:opacity-50"
             >
@@ -220,7 +252,7 @@ export default function AdminReviewsPage() {
       )}
 
       {/* Review Details Modal */}
-      {selectedReview && (
+      {/* {selectedReview && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-[500px] text-center space-y-4">
             <h2 className="text-xl font-semibold">Review Details</h2>
@@ -240,7 +272,55 @@ export default function AdminReviewsPage() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+ 
+{/* Review Details Modal */}
+{selectedReview && (
+  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md relative">
+      
+      {/* Full-width header with no white space */}
+      <div className="w-full h-[50px] bg-[#802549] flex items-center justify-center rounded-t-2xl">
+        <h2 className="text-lg sm:text-xl font-semibold text-white">
+          Review Details
+        </h2>
+      </div>
+
+      {/* Content with padding */}
+      <div className="p-6 sm:p-8">
+        {/* <div className="h-1 w-20 bg-pink-400 mx-auto mb-6 rounded-full"></div> */}
+
+        <div className="space-y-3 text-sm sm:text-base text-gray-700">
+          <p><span className="font-semibold">User:</span> {selectedReview.userName}</p>
+          <p><span className="font-semibold">Email:</span> {selectedReview.userEmail}</p>
+          <p><span className="font-semibold">Product ID:</span> {selectedReview.productId}</p>
+          <p className="flex items-center gap-1">
+            <span className="font-semibold">Rating:</span>
+            {Array.from({ length: 5 }).map((_, i) =>
+              i < selectedReview.rating ? (
+                <FaStar key={i} className="text-yellow-400" />
+              ) : (
+                <FaRegStar key={i} className="text-gray-300" />
+              )
+            )}
+          </p>
+          <p><span className="font-semibold">Comment:</span> {selectedReview.comment}</p>
+          <p><span className="font-semibold">Date:</span> {new Date(selectedReview.createdAt).toLocaleDateString()}</p>
+        </div>
+      </div>
+
+      {/* Close Icon Button */}
+      <button
+        onClick={closeModal}
+        className="w-[40px] h-[40px] rounded-full bg-[#fdf6f0] shadow shadow-black flex justify-center items-center absolute top-[-20px] right-[-20px]"
+      >
+        <IoCloseSharp />
+      </button>
+    </div>
+  </div>
+)}
+
+
 
       {/* Confirmation Modal */}
       {confirmDialog.isOpen && (
@@ -251,14 +331,24 @@ export default function AdminReviewsPage() {
               <button
                 onClick={() => {
                   confirmDialog.onConfirm();
-                  setConfirmDialog({ isOpen: false, message: "", onConfirm: null });
+                  setConfirmDialog({
+                    isOpen: false,
+                    message: "",
+                    onConfirm: null,
+                  });
                 }}
                 className="px-4 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
               >
                 Confirm
               </button>
               <button
-                onClick={() => setConfirmDialog({ isOpen: false, message: "", onConfirm: null })}
+                onClick={() =>
+                  setConfirmDialog({
+                    isOpen: false,
+                    message: "",
+                    onConfirm: null,
+                  })
+                }
                 className="px-4 py-1 text-sm bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
               >
                 Cancel

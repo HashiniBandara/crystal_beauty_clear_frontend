@@ -8,7 +8,7 @@ export default function ImageSlider(props) {
     <div className="w-full h-full flex justify-center items-center">
       <div className="w-full lg:w-[70%] aspect-square bg-gray-200 relative">
         <img src={activeImage} className="w-full h-full object-cover" />
-        <div className="w-full h-[100px] absolute backdrop-blur-3xl bottom-0 left-0 hidden lg:flex justify-center items-center">
+        <div className="w-full h-[70px] absolute backdrop-blur-3xl bottom-0 left-0 hidden lg:flex justify-center items-center">
           {images.map((images, index) => {
             return (
               <img
