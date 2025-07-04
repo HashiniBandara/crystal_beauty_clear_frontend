@@ -193,7 +193,7 @@ export default function HomePageDesign() {
               <img
                 src={cat.image || "/images/default-category.jpg"}
                 alt={cat.name}
-                className="w-full h-120 object-cover"
+                className="w-full h-100 object-cover"
               />
               <div className="p-4 text-center font-semibold text-lg">
                 {cat.name}
