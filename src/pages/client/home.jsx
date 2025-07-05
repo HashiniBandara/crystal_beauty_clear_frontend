@@ -25,6 +25,13 @@ export default function HomePageDesign() {
     "/images/banner1.jpg",
     "/images/banner2.jpg",
     "/images/banner3.jpg",
+    "/images/banner4.jpg",
+    "/images/banner5.jpg",
+    "/images/banner6.png",
+    "/images/banner7.jpg",
+    "/images/banner8.png",
+    "/images/banner9.png",
+    "/images/banner10.jpg",
   ];
 
   const scrollRef = useRef();
@@ -84,7 +91,7 @@ export default function HomePageDesign() {
         stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />);
       else stars.push(<FaRegStar key={i} className="text-yellow-400" />);
     }
-    return <div className="flex justify-center gap-1">{stars}</div>;
+    return <div className="flex justify-start gap-1">{stars}</div>;
   };
 
   const renderProductCard = (p) => {
@@ -182,7 +189,9 @@ export default function HomePageDesign() {
 
       {/* Categories */}
       <section className="py-16 px-4 sm:px-10 bg-white">
-        <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">
+          Shop by Category
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {categories.map((cat) => (
             <Link
@@ -204,11 +213,39 @@ export default function HomePageDesign() {
       </section>
 
       {/* Best / Trending / Featured Sections */}
-      {[{ title: "Best Sellers", items: bestSellers, visible: visibleBest, setter: setVisibleBest, bg: "white" }, { title: "Trending Now", items: trendingProducts, visible: visibleTrending, setter: setVisibleTrending, bg: "#fdf6f0" }, { title: "Featured Products", items: featuredProducts, visible: visibleFeatured, setter: setVisibleFeatured, bg: "white" }].map(({ title, items, visible, setter, bg }) => (
-        <section key={title} className={`py-16 px-4 sm:px-10`} style={{ backgroundColor: bg }}>
+      {[
+        {
+          title: "Best Sellers",
+          items: bestSellers,
+          visible: visibleBest,
+          setter: setVisibleBest,
+          bg: "white",
+        },
+        {
+          title: "Trending Now",
+          items: trendingProducts,
+          visible: visibleTrending,
+          setter: setVisibleTrending,
+          bg: "#fdf6f0",
+        },
+        {
+          title: "Featured Products",
+          items: featuredProducts,
+          visible: visibleFeatured,
+          setter: setVisibleFeatured,
+          bg: "white",
+        },
+      ].map(({ title, items, visible, setter, bg }) => (
+        <section
+          key={title}
+          className={`py-16 px-4 sm:px-10`}
+          style={{ backgroundColor: bg }}
+        >
           <h2 className="text-3xl font-bold text-center mb-12">{title}</h2>
           {items.length === 0 ? (
-            <p className="text-center text-gray-500">No {title.toLowerCase()} available.</p>
+            <p className="text-center text-gray-500">
+              No {title.toLowerCase()} available.
+            </p>
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -216,7 +253,12 @@ export default function HomePageDesign() {
               </div>
               {visible < items.length && (
                 <div className="text-center mt-8">
-                  <button onClick={() => setter((prev) => prev + 4)} className="bg-[#802549] text-white px-6 py-3 rounded-full hover:bg-pink-700 transition">Load More</button>
+                  <button
+                    onClick={() => setter((prev) => prev + 4)}
+                    className="bg-[#802549] text-white px-6 py-3 rounded-full hover:bg-pink-700 transition"
+                  >
+                    Load More
+                  </button>
                 </div>
               )}
             </>
@@ -252,7 +294,9 @@ export default function HomePageDesign() {
                   </p>
                   {renderStars(review.rating)}
                   <div className="flex flex-col items-center mt-4">
-                    <h4 className="font-semibold truncate">{review.userName}</h4>
+                    <h4 className="font-semibold truncate">
+                      {review.userName}
+                    </h4>
                     <p className="text-sm text-gray-400">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </p>
@@ -272,21 +316,30 @@ export default function HomePageDesign() {
 
       {/* Benefits */}
       <section className="bg-pink-50 py-16 px-4 sm:px-10 text-center">
-        <h2 className="text-3xl font-bold mb-12">Why Choose Cristal Beauty Clear?</h2>
+        <h2 className="text-3xl font-bold mb-12">
+          Why Choose Cristal Beauty Clear?
+        </h2>
         <div className="grid md:grid-cols-3 gap-8">
           <div>
-            <h4 className="text-xl font-semibold mb-2"> 
+            <h4 className="text-xl font-semibold mb-2">
               <FaLeaf className="inline-block text-[ #8deb93 ] text-4xl mr-2" />
-              Natural Ingredients</h4>
-            <p className="text-gray-700">Made from 100% fruit-based natural extracts.</p>
+              Natural Ingredients
+            </h4>
+            <p className="text-gray-700">
+              Made from 100% fruit-based natural extracts.
+            </p>
           </div>
           <div>
             <h4 className="text-xl font-semibold mb-2">Cruelty-Free</h4>
-            <p className="text-gray-700">No animal testing – ever. Beauty with a conscience.</p>
+            <p className="text-gray-700">
+              No animal testing – ever. Beauty with a conscience.
+            </p>
           </div>
           <div>
             <h4 className="text-xl font-semibold mb-2">Skin-Loving Formulas</h4>
-            <p className="text-gray-700">Gentle, hydrating care for every skin type.</p>
+            <p className="text-gray-700">
+              Gentle, hydrating care for every skin type.
+            </p>
           </div>
         </div>
       </section>
@@ -294,7 +347,9 @@ export default function HomePageDesign() {
       {/* Newsletter */}
       <section className="bg-[#802549] text-white py-16 text-center px-4">
         <h2 className="text-3xl font-bold mb-4">Get Exclusive Offers</h2>
-        <p className="mb-6 text-lg">Sign up for our newsletter and be the first to know!</p>
+        <p className="mb-6 text-lg">
+          Sign up for our newsletter and be the first to know!
+        </p>
         <div className="flex justify-center">
           <input
             type="email"

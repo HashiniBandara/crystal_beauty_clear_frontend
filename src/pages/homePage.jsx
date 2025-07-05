@@ -7,6 +7,9 @@ import CheckoutPage from "./client/checkout";
 import HomePageDesign from "./client/home";
 import UserProfile from "./client/UserProfile";
 import Footer from "../components/footer";
+import SkincarePage from "./client/SkincarePage";
+import MakeupPage from "./client/MakeupPage";
+import HaircarePage from "./client/HaircarePage";
 
 // export default function HomePage() {
 //   return (
@@ -26,7 +29,7 @@ import Footer from "../components/footer";
 //       </div>
 //        <Footer />
 //     </div>
-    
+
 //   );
 // }
 
@@ -35,14 +38,16 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <div className="flex-grow">
-       <Routes path="/*">
+        <Routes path="/*">
           <Route path="/" element={<HomePageDesign />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/overview/:id" element={<ProductOverview />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/profile" element={<UserProfile />} />
-
+          <Route path="/category/skincare" element={<SkincarePage />} />
+          <Route path="/category/makeup" element={<MakeupPage />} />
+          <Route path="/category/haircare" element={<HaircarePage />} />
           <Route path="/*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>
@@ -50,4 +55,3 @@ export default function HomePage() {
     </div>
   );
 }
-

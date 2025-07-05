@@ -62,7 +62,19 @@ export default function AdminPage() {
       {/* Sidebar */}
       <aside className="w-72 bg-[#802549] text-white flex flex-col">
         <div className="p-5 text-2xl font-bold border-b border-white/20">
-          Crystal Beauty Clear
+          {/* Crystal Beauty Clear */}
+          {/* Logo */}
+          <Link
+            to="/"
+            className="text-2xl font-bold tracking-wide text-[#802549]"
+          >
+            {/* Cristal Beauty Clear */}
+            <img
+              src="/logo/cbc-logo-new.png"
+              alt="Cristal Beauty Clear"
+              className="h-12"
+            />
+          </Link>
         </div>
         <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-3">
           <Link
