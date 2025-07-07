@@ -12,6 +12,7 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
   });
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -33,26 +34,12 @@ export default function RegisterPage() {
     try {
       const response = await axios.post(
         import.meta.env.VITE_BACKEND_URL + "/api/user/",
-        {
-          firstName,
-          lastName,
-          email,
-          phone,
-          password,
-        }
+        { firstName, lastName, email, phone, password }
       );
 
-    //   if (response.data.success) {
-    //     // ✅ Pass state to Login page to show success toast
-    //     setTimeout(() => {
-    //       navigate("/login", { state: { registered: true } });
-    //     }, 500);
-    //   } 
-    if (response.data.success) {
+      if (response.data.success) {
         navigate("/login", { state: { registered: true } });
-      }
-      
-      else {
+      } else {
         toast.error(response.data.message || "Registration failed");
       }
     } catch (error) {
@@ -63,72 +50,83 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-[url(/login-bg.jpg)] bg-cover bg-center">
-      <div className="w-[50%] h-full"></div>
-      <div className="w-[50%] h-full flex justify-center items-center">
-        <div className="w-[450px] h-[700px] backdrop-blur-xl shadow-xl rounded-xl flex flex-col justify-center items-center">
-          <input
-            onChange={handleChange}
-            name="firstName"
-            value={formData.firstName}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="text"
-            placeholder="First Name"
-          />
-          <input
-            onChange={handleChange}
-            name="lastName"
-            value={formData.lastName}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="text"
-            placeholder="Last Name"
-          />
-          <input
-            onChange={handleChange}
-            name="email"
-            value={formData.email}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="email"
-            placeholder="Email"
-          />
-          <input
-            onChange={handleChange}
-            name="phone"
-            value={formData.phone}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="text"
-            placeholder="Phone Number"
-          />
-          <input
-            onChange={handleChange}
-            name="password"
-            value={formData.password}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="password"
-            placeholder="Password"
-          />
-          <input
-            onChange={handleChange}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="password"
-            placeholder="Confirm Password"
-          />
-          <button
-            onClick={handleRegister}
-            className="w-[400px] h-[50px] bg-green-500 text-white rounded-xl text-center m-[5px] cursor-pointer"
-            disabled={loading}
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 sm:px-6 lg:px-8"
+      style={{ backgroundImage: "url('/login-bg.jpg')" }}
+    >
+      <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl max-w-md w-full p-8 sm:p-10 flex flex-col items-center">
+        {/* Logo */}
+        <img src="/logo/cbc-logo-withoutbg.png" alt="Logo" className="w-[300px] h-auto mb-6" />
+
+        {/* Input fields */}
+        <input
+          onChange={handleChange}
+          name="firstName"
+          value={formData.firstName}
+          type="text"
+          placeholder="First Name"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <input
+          onChange={handleChange}
+          name="lastName"
+          value={formData.lastName}
+          type="text"
+          placeholder="Last Name"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <input
+          onChange={handleChange}
+          name="email"
+          value={formData.email}
+          type="email"
+          placeholder="Email"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <input
+          onChange={handleChange}
+          name="phone"
+          value={formData.phone}
+          type="text"
+          placeholder="Phone Number"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <input
+          onChange={handleChange}
+          name="password"
+          value={formData.password}
+          type="password"
+          placeholder="Password"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <input
+          onChange={handleChange}
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          type="password"
+          placeholder="Confirm Password"
+          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+
+        {/* Register button */}
+        <button
+          onClick={handleRegister}
+          disabled={loading}
+          className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-4"
+        >
+          {loading ? "Registering..." : "Register"}
+        </button>
+
+        {/* Already have an account */}
+        <p className="text-sm text-gray-700">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-green-600 hover:underline hover:text-green-800"
           >
-            {loading ? "Registering..." : "Register"}
-          </button>
-          <p className="text-gray-600 text-center m-[10px]">
-            Already have an account?{" "}
-            <span className="text-green-500 cursor-pointer hover:text-green-700">
-              <Link to="/login">Login</Link>
-            </span>
-          </p>
-        </div>
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );

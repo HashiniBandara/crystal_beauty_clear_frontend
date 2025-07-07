@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -17,17 +18,15 @@ export default function ForgetPassword() {
 
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "/api/user/changePw", {
-        email: email,
-        otp: otp,
-        password: password,
+        email,
+        otp,
+        password,
       })
       .then((response) => {
-        console.log(response.data);
         toast.success("Password changed successfully");
         window.location.href = "/login";
       })
       .catch((error) => {
-        console.log(error);
         toast.error("Something went wrong");
         window.location.reload();
       });
@@ -39,121 +38,103 @@ export default function ForgetPassword() {
         email: email,
       })
       .then((response) => {
-        console.log(response.data);
         setEmailSent(true);
-        toast.success("Email sent successfully");
+        toast.success("OTP sent successfully");
       })
       .catch((error) => {
-        console.log(error);
         toast.error("Email sending failed");
       });
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      {emailSent ? (
-        // reset password page -> otp, password, confirm password
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-            Reset Your Password
-          </h2>
-          {/* otp */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Enter OTP
-            </label>
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4"
+      style={{ backgroundImage: "url('/login-bg.jpg')" }}
+    >
+      <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl max-w-md w-full p-8 sm:p-10 flex flex-col items-center">
+        {/* Logo */}
+        <img src="/logo/cbc-logo-withoutbg.png" alt="Logo" className="w-[300px] h-auto mb-6" />
+
+        {emailSent ? (
+          <>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+              Reset Your Password
+            </h2>
+
+            {/* OTP */}
             <input
               type="text"
               placeholder="Enter OTP"
-              name="otp"
-              id="otp"
-              required
-              onChange={(e) => setOtp(e.target.value)}
               value={otp}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onChange={(e) => setOtp(e.target.value)}
+              className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-          </div>
-          {/* password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
+
+            {/* Password */}
             <input
               type="password"
-              placeholder="Enter Password"
-              name="password"
-              id="password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="New Password"
               value={password}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-          </div>
-          {/* confirm password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password
-            </label>
+
+            {/* Confirm Password */}
             <input
               type="password"
               placeholder="Confirm Password"
-              name="confirmPassword"
-              id="confirmPassword"
-              required
-              onChange={(e) => setConfirmPassword(e.target.value)}
               value={confirmPassword}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-60 mt-4"
-            onClick={changePassword}
-          >
-            Reset Password
-          </button>
-        </div>
-      ) : (
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-            Forgot Your Password?
-          </h2>
-          <p className="text-gray-500 text-sm mb-6 text-center">
-            Enter your email address and we'll send you a link to reset your
-            password.
-          </p>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
+            <button
+              type="button"
+              onClick={changePassword}
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition duration-200"
+            >
+              Reset Password
+            </button>
+
+            <p className="text-sm text-center mt-4">
+              <Link to="/login" className="text-green-600 hover:underline">
+                Back to Login
+              </Link>
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+              Forgot Your Password?
+            </h2>
+            <p className="text-gray-600 text-sm mb-6 text-center">
+              Enter your email address. We'll send you an OTP to reset your password.
+            </p>
+
             <input
               type="email"
               placeholder="you@example.com"
-              name="email"
-              id="email"
-              required
-              onChange={(e) => setEmail(e.target.value)}
               value={email}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-          </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-60 mt-4"
-            onClick={sendEmail}
-          >
-            Send OTP
-          </button>
+            <button
+              type="button"
+              onClick={sendEmail}
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition duration-200"
+            >
+              Send OTP
+            </button>
 
-          <div className="text-sm text-center mt-6">
-            <a href="/login" className="text-blue-600 hover:underline">
-              Back to Login
-            </a>
-          </div>
-        </div>
-      )}
+            <p className="text-sm text-center mt-4">
+              <Link to="/login" className="text-green-600 hover:underline">
+                Back to Login
+              </Link>
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 }
