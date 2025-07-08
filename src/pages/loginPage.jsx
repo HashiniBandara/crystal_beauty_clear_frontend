@@ -89,7 +89,7 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="Email"
-          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
 
         {/* Password input */}
@@ -97,14 +97,14 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Password"
-          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
 
         {/* Login button */}
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-4"
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-4"
         >
           {loading ? "Loading..." : "Login"}
         </button>
@@ -121,7 +121,7 @@ export default function LoginPage() {
         <button
           onClick={loginWithGoogle}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 border border-green-500 text-green-700 py-3 rounded-lg font-semibold hover:bg-green-50 transition duration-200 mb-4"
+          className="w-full flex items-center justify-center gap-2 border border-pink-500 text-pink-700 py-3 rounded-lg font-semibold hover:bg-pink-50 transition duration-200 mb-4"
         >
           <GrGoogle className="text-xl" />
           {loading ? "Loading..." : "Login with Google"}
@@ -132,7 +132,7 @@ export default function LoginPage() {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="text-green-600 hover:underline hover:text-green-800"
+            className="text-pink-600 hover:underline hover:text-pink-800"
           >
             Register Now
           </Link>
@@ -143,7 +143,7 @@ export default function LoginPage() {
           Forgot your password?{" "}
           <Link
             to="/forget"
-            className="text-green-600 hover:underline hover:text-green-800"
+            className="text-pink-600 hover:underline hover:text-pink-800"
           >
             Reset Password
           </Link>

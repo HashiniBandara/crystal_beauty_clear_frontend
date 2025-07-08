@@ -65,7 +65,7 @@ export default function RegisterPage() {
           value={formData.firstName}
           type="text"
           placeholder="First Name"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -73,7 +73,7 @@ export default function RegisterPage() {
           value={formData.lastName}
           type="text"
           placeholder="Last Name"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -81,7 +81,7 @@ export default function RegisterPage() {
           value={formData.email}
           type="email"
           placeholder="Email"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -89,7 +89,7 @@ export default function RegisterPage() {
           value={formData.phone}
           type="text"
           placeholder="Phone Number"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -97,7 +97,7 @@ export default function RegisterPage() {
           value={formData.password}
           type="password"
           placeholder="Password"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -105,14 +105,14 @@ export default function RegisterPage() {
           value={formData.confirmPassword}
           type="password"
           placeholder="Confirm Password"
-          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
 
         {/* Register button */}
         <button
           onClick={handleRegister}
           disabled={loading}
-          className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-4"
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-4"
         >
           {loading ? "Registering..." : "Register"}
         </button>
@@ -122,7 +122,7 @@ export default function RegisterPage() {
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-green-600 hover:underline hover:text-green-800"
+            className="text-pink-600 hover:underline hover:text-pink-800"
           >
             Login
           </Link>

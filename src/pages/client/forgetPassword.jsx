@@ -67,7 +67,7 @@ export default function ForgetPassword() {
               placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
 
             {/* Password */}
@@ -76,7 +76,7 @@ export default function ForgetPassword() {
               placeholder="New Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
 
             {/* Confirm Password */}
@@ -85,19 +85,19 @@ export default function ForgetPassword() {
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
 
             <button
               type="button"
               onClick={changePassword}
-              className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition duration-200"
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition duration-200"
             >
               Reset Password
             </button>
 
             <p className="text-sm text-center mt-4">
-              <Link to="/login" className="text-green-600 hover:underline">
+              <Link to="/login" className="text-pink-600 hover:underline">
                 Back to Login
               </Link>
             </p>
@@ -116,19 +116,19 @@ export default function ForgetPassword() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
 
             <button
               type="button"
               onClick={sendEmail}
-              className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition duration-200"
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition duration-200"
             >
               Send OTP
             </button>
 
             <p className="text-sm text-center mt-4">
-              <Link to="/login" className="text-green-600 hover:underline">
+              <Link to="/login" className="text-pink-600 hover:underline">
                 Back to Login
               </Link>
             </p>

@@ -9,7 +9,6 @@ import {
   FaUserEdit,
 } from "react-icons/fa";
 import { MdManageHistory } from "react-icons/md";
-import mediaUpload from "../../utils/mediaUpload"; // Your Supabase uploader or any uploader
 
 export default function UserProfile({ Header }) {
   const [user, setUser] = useState(null);
@@ -21,17 +20,12 @@ export default function UserProfile({ Header }) {
   const [search, setSearch] = useState("");
   const ORDERS_PER_PAGE = 5;
 
-  // Initialize form data with empty strings to avoid uncontrolled inputs
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     phone: "",
     email: "",
-    image: "", // this holds image URL string
   });
-
-  const [imageFile, setImageFile] = useState(null); // file before uploading
-  const [imagePreview, setImagePreview] = useState(null); // preview URL (either uploaded or selected file preview)
 
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
@@ -39,12 +33,10 @@ export default function UserProfile({ Header }) {
     confirmPassword: "",
   });
 
-  // Load user and orders on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return (window.location.href = "/login");
 
-    // Fetch user data
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/user/current", {
         headers: { Authorization: `Bearer ${token}` },
@@ -53,17 +45,14 @@ export default function UserProfile({ Header }) {
         const u = res.data.user;
         setUser(u);
         setFormData({
-          firstName: u.firstName || "",
-          lastName: u.lastName || "",
-          phone: u.phone || "",
-          email: u.email || "",
-          image: u.image || "", // set image URL here
+          firstName: u.firstName,
+          lastName: u.lastName,
+          phone: u.phone,
+          email: u.email,
         });
-        setImagePreview(u.image || null); // set preview with existing image URL or null
       })
       .catch(() => (window.location.href = "/login"));
 
-    // Fetch orders
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/order", {
         headers: { Authorization: `Bearer ${token}` },
@@ -83,46 +72,20 @@ export default function UserProfile({ Header }) {
     page * ORDERS_PER_PAGE
   );
 
-  // Profile update handler
-  const handleProfileUpdate = async () => {
+  const handleProfileUpdate = () => {
     const token = localStorage.getItem("token");
-
-    try {
-      let imageUrl = formData.image;
-
-      // If user selected a new image file, upload it first
-      if (imageFile) {
-        toast.loading("Uploading image...");
-        imageUrl = await mediaUpload(imageFile);
-        toast.dismiss();
-        toast.success("Image uploaded");
-      }
-
-      // Prepare updated data to send (image URL or existing)
-      const updatedData = {
-        ...formData,
-        image: imageUrl,
-      };
-
-      const res = await axios.put(
-        import.meta.env.VITE_BACKEND_URL + "/api/user/update",
-        updatedData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      toast.success(res.data.message);
-      setUser(res.data.user);
-      setFormData((prev) => ({ ...prev, image: res.data.user.image || "" }));
-      setEditProfile(false);
-      setImageFile(null);
-      setImagePreview(res.data.user.image || null);
-    } catch (error) {
-      toast.dismiss();
-      toast.error("Failed to update profile");
-    }
+    axios
+      .put(import.meta.env.VITE_BACKEND_URL + "/api/user/update", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        toast.success(res.data.message);
+        setUser(res.data.user);
+        setEditProfile(false);
+      })
+      .catch(() => toast.error("Failed to update profile"));
   };
 
-  // Password change handler
   const handlePasswordChange = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       return toast.error("Passwords do not match");
@@ -162,6 +125,7 @@ export default function UserProfile({ Header }) {
               <MdManageHistory className="text-4xl" />
               Order History
             </h2>
+
             <input
               type="text"
               placeholder="Search by Order ID"
@@ -180,7 +144,7 @@ export default function UserProfile({ Header }) {
               {paginatedOrders.map((order) => (
                 <div
                   key={order.orderId}
-                  className="border border-gray-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between hover:shadow-lg hover:bg-[#fdf6f0] transition"
+                  className="border border-gray-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between hover:shadow-lg hover:bg-[#fdf6f0]  transition"
                 >
                   <div>
                     <p className="font-semibold text-lg">
@@ -233,35 +197,9 @@ export default function UserProfile({ Header }) {
           )}
         </section>
 
-        {/* Profile Section */}
-        <aside className="bg-white rounded-2xl shadow-lg p-8 h-fit">
-          <div className="flex justify-center mb-4 flex-col items-center">
-            <img
-              src={
-                imagePreview ||
-                formData.image || // use formData.image fallback
-                "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-              }
-              alt="Profile"
-              className="w-28 h-28 rounded-full border object-cover shadow-md mb-2"
-            />
-            
-            {editProfile && (
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    setImageFile(e.target.files[0]);
-                    setImagePreview(URL.createObjectURL(e.target.files[0]));
-                  }
-                }}
-                className="text-sm text-pink-700"
-              />
-            )}
-          </div>
-
-          <h2 className="text-3xl font-extrabold mb-6 flex items-center gap-2 text-center justify-center">
+        {/* Profile Info */}
+        <aside className="bg-white rounded-2xl shadow-lg p-8 h-[350px]">
+          <h2 className="text-3xl font-extrabold mb-6 flex items-center gap-2">
             {editProfile ? (
               <FaUserEdit className="text-4xl" />
             ) : showChangePassword ? (
@@ -276,9 +214,8 @@ export default function UserProfile({ Header }) {
               : "My Profile"}
           </h2>
 
-          {/* Profile Info */}
           {!editProfile && !showChangePassword && (
-            <div className="space-y-4 text-center">
+            <div className="space-y-4">
               <p>
                 <strong>Name:</strong> {user.firstName} {user.lastName}
               </p>
@@ -288,6 +225,12 @@ export default function UserProfile({ Header }) {
               <p>
                 <strong>Phone:</strong> {user.phone}
               </p>
+              {/* <p>
+                <strong>Role:</strong>{" "}
+                <span className="capitalize bg-pink-100 text-pink-700 px-2 py-1 rounded-full text-sm font-semibold">
+                  {user.role}
+                </span>
+              </p> */}
 
               <div className="flex flex-col gap-3 mt-6">
                 <button
@@ -306,7 +249,6 @@ export default function UserProfile({ Header }) {
             </div>
           )}
 
-          {/* Edit Profile Form */}
           {editProfile && (
             <form
               onSubmit={(e) => {
@@ -354,18 +296,7 @@ export default function UserProfile({ Header }) {
                 <button
                   type="button"
                   className="bg-pink-100 text-pink-700 hover:bg-pink-200 font-semibold py-2 px-4 rounded-lg shadow"
-                  onClick={() => {
-                    setEditProfile(false);
-                    setImageFile(null);
-                    setImagePreview(user.image || null);
-                    setFormData((prev) => ({
-                      ...prev,
-                      firstName: user.firstName || "",
-                      lastName: user.lastName || "",
-                      phone: user.phone || "",
-                      image: user.image || "",
-                    }));
-                  }}
+                  onClick={() => setEditProfile(false)}
                 >
                   Cancel
                 </button>
@@ -373,7 +304,6 @@ export default function UserProfile({ Header }) {
             </form>
           )}
 
-          {/* Change Password Form */}
           {showChangePassword && (
             <form
               onSubmit={(e) => {
@@ -441,7 +371,7 @@ export default function UserProfile({ Header }) {
         </aside>
       </div>
 
-      {/* Order Modal */}
+      {/* Order Details Modal */}
       {selectedOrder && (
         <div
           className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4"

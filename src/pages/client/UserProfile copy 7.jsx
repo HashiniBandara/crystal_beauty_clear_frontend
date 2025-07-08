@@ -9,7 +9,7 @@ import {
   FaUserEdit,
 } from "react-icons/fa";
 import { MdManageHistory } from "react-icons/md";
-import mediaUpload from "../../utils/mediaUpload"; // Your Supabase uploader or any uploader
+import mediaUpload from "../../utils/mediaUpload"; // 🔥 Supabase uploader
 
 export default function UserProfile({ Header }) {
   const [user, setUser] = useState(null);
@@ -21,17 +21,16 @@ export default function UserProfile({ Header }) {
   const [search, setSearch] = useState("");
   const ORDERS_PER_PAGE = 5;
 
-  // Initialize form data with empty strings to avoid uncontrolled inputs
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     phone: "",
     email: "",
-    image: "", // this holds image URL string
+    image: "", // ✅ added
   });
 
-  const [imageFile, setImageFile] = useState(null); // file before uploading
-  const [imagePreview, setImagePreview] = useState(null); // preview URL (either uploaded or selected file preview)
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
@@ -39,12 +38,10 @@ export default function UserProfile({ Header }) {
     confirmPassword: "",
   });
 
-  // Load user and orders on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return (window.location.href = "/login");
 
-    // Fetch user data
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/user/current", {
         headers: { Authorization: `Bearer ${token}` },
@@ -53,17 +50,16 @@ export default function UserProfile({ Header }) {
         const u = res.data.user;
         setUser(u);
         setFormData({
-          firstName: u.firstName || "",
-          lastName: u.lastName || "",
-          phone: u.phone || "",
-          email: u.email || "",
-          image: u.image || "", // set image URL here
+          firstName: u.firstName,
+          lastName: u.lastName,
+          phone: u.phone,
+          email: u.email,
+          image: u.image || "", // ✅ set image
         });
-        setImagePreview(u.image || null); // set preview with existing image URL or null
+        setImagePreview(u.image || null);
       })
       .catch(() => (window.location.href = "/login"));
 
-    // Fetch orders
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/order", {
         headers: { Authorization: `Bearer ${token}` },
@@ -83,14 +79,12 @@ export default function UserProfile({ Header }) {
     page * ORDERS_PER_PAGE
   );
 
-  // Profile update handler
   const handleProfileUpdate = async () => {
     const token = localStorage.getItem("token");
 
     try {
       let imageUrl = formData.image;
 
-      // If user selected a new image file, upload it first
       if (imageFile) {
         toast.loading("Uploading image...");
         imageUrl = await mediaUpload(imageFile);
@@ -98,7 +92,6 @@ export default function UserProfile({ Header }) {
         toast.success("Image uploaded");
       }
 
-      // Prepare updated data to send (image URL or existing)
       const updatedData = {
         ...formData,
         image: imageUrl,
@@ -112,7 +105,6 @@ export default function UserProfile({ Header }) {
 
       toast.success(res.data.message);
       setUser(res.data.user);
-      setFormData((prev) => ({ ...prev, image: res.data.user.image || "" }));
       setEditProfile(false);
       setImageFile(null);
       setImagePreview(res.data.user.image || null);
@@ -122,7 +114,6 @@ export default function UserProfile({ Header }) {
     }
   };
 
-  // Password change handler
   const handlePasswordChange = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       return toast.error("Passwords do not match");
@@ -239,13 +230,12 @@ export default function UserProfile({ Header }) {
             <img
               src={
                 imagePreview ||
-                formData.image || // use formData.image fallback
+                user.image ||
                 "https://cdn-icons-png.flaticon.com/512/847/847969.png"
               }
               alt="Profile"
               className="w-28 h-28 rounded-full border object-cover shadow-md mb-2"
             />
-            
             {editProfile && (
               <input
                 type="file"
@@ -306,7 +296,7 @@ export default function UserProfile({ Header }) {
             </div>
           )}
 
-          {/* Edit Profile Form */}
+          {/* Edit Profile */}
           {editProfile && (
             <form
               onSubmit={(e) => {
@@ -358,13 +348,6 @@ export default function UserProfile({ Header }) {
                     setEditProfile(false);
                     setImageFile(null);
                     setImagePreview(user.image || null);
-                    setFormData((prev) => ({
-                      ...prev,
-                      firstName: user.firstName || "",
-                      lastName: user.lastName || "",
-                      phone: user.phone || "",
-                      image: user.image || "",
-                    }));
                   }}
                 >
                   Cancel
@@ -373,7 +356,7 @@ export default function UserProfile({ Header }) {
             </form>
           )}
 
-          {/* Change Password Form */}
+          {/* Change Password */}
           {showChangePassword && (
             <form
               onSubmit={(e) => {

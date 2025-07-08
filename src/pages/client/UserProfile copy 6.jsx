@@ -9,7 +9,6 @@ import {
   FaUserEdit,
 } from "react-icons/fa";
 import { MdManageHistory } from "react-icons/md";
-import mediaUpload from "../../utils/mediaUpload"; // Your Supabase uploader or any uploader
 
 export default function UserProfile({ Header }) {
   const [user, setUser] = useState(null);
@@ -21,17 +20,16 @@ export default function UserProfile({ Header }) {
   const [search, setSearch] = useState("");
   const ORDERS_PER_PAGE = 5;
 
-  // Initialize form data with empty strings to avoid uncontrolled inputs
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     phone: "",
     email: "",
-    image: "", // this holds image URL string
   });
 
-  const [imageFile, setImageFile] = useState(null); // file before uploading
-  const [imagePreview, setImagePreview] = useState(null); // preview URL (either uploaded or selected file preview)
+  // For image preview & file
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
@@ -39,12 +37,10 @@ export default function UserProfile({ Header }) {
     confirmPassword: "",
   });
 
-  // Load user and orders on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return (window.location.href = "/login");
 
-    // Fetch user data
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/user/current", {
         headers: { Authorization: `Bearer ${token}` },
@@ -53,17 +49,15 @@ export default function UserProfile({ Header }) {
         const u = res.data.user;
         setUser(u);
         setFormData({
-          firstName: u.firstName || "",
-          lastName: u.lastName || "",
-          phone: u.phone || "",
-          email: u.email || "",
-          image: u.image || "", // set image URL here
+          firstName: u.firstName,
+          lastName: u.lastName,
+          phone: u.phone,
+          email: u.email,
         });
-        setImagePreview(u.image || null); // set preview with existing image URL or null
+        setImagePreview(u.image || null);
       })
       .catch(() => (window.location.href = "/login"));
 
-    // Fetch orders
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/order", {
         headers: { Authorization: `Bearer ${token}` },
@@ -83,46 +77,47 @@ export default function UserProfile({ Header }) {
     page * ORDERS_PER_PAGE
   );
 
-  // Profile update handler
-  const handleProfileUpdate = async () => {
+  const handleProfileUpdate = () => {
     const token = localStorage.getItem("token");
 
-    try {
-      let imageUrl = formData.image;
+    // If new image file selected, use FormData, else just send formData JSON
+    if (imageFile) {
+      const data = new FormData();
+      data.append("firstName", formData.firstName);
+      data.append("lastName", formData.lastName);
+      data.append("phone", formData.phone);
+      data.append("email", formData.email);
+      data.append("image", imageFile);
 
-      // If user selected a new image file, upload it first
-      if (imageFile) {
-        toast.loading("Uploading image...");
-        imageUrl = await mediaUpload(imageFile);
-        toast.dismiss();
-        toast.success("Image uploaded");
-      }
-
-      // Prepare updated data to send (image URL or existing)
-      const updatedData = {
-        ...formData,
-        image: imageUrl,
-      };
-
-      const res = await axios.put(
-        import.meta.env.VITE_BACKEND_URL + "/api/user/update",
-        updatedData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      toast.success(res.data.message);
-      setUser(res.data.user);
-      setFormData((prev) => ({ ...prev, image: res.data.user.image || "" }));
-      setEditProfile(false);
-      setImageFile(null);
-      setImagePreview(res.data.user.image || null);
-    } catch (error) {
-      toast.dismiss();
-      toast.error("Failed to update profile");
+      axios
+        .put(import.meta.env.VITE_BACKEND_URL + "/api/user/update", data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+          setUser(res.data.user);
+          setEditProfile(false);
+          setImageFile(null);
+          setImagePreview(res.data.user.image || null);
+        })
+        .catch(() => toast.error("Failed to update profile"));
+    } else {
+      axios
+        .put(import.meta.env.VITE_BACKEND_URL + "/api/user/update", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          toast.success(res.data.message);
+          setUser(res.data.user);
+          setEditProfile(false);
+        })
+        .catch(() => toast.error("Failed to update profile"));
     }
   };
 
-  // Password change handler
   const handlePasswordChange = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       return toast.error("Passwords do not match");
@@ -162,6 +157,7 @@ export default function UserProfile({ Header }) {
               <MdManageHistory className="text-4xl" />
               Order History
             </h2>
+
             <input
               type="text"
               placeholder="Search by Order ID"
@@ -233,19 +229,19 @@ export default function UserProfile({ Header }) {
           )}
         </section>
 
-        {/* Profile Section */}
+        {/* Profile Info */}
         <aside className="bg-white rounded-2xl shadow-lg p-8 h-fit">
+          {/* Profile Image */}
           <div className="flex justify-center mb-4 flex-col items-center">
             <img
               src={
                 imagePreview ||
-                formData.image || // use formData.image fallback
+                user.image ||
                 "https://cdn-icons-png.flaticon.com/512/847/847969.png"
               }
               alt="Profile"
               className="w-28 h-28 rounded-full border object-cover shadow-md mb-2"
             />
-            
             {editProfile && (
               <input
                 type="file"
@@ -276,7 +272,7 @@ export default function UserProfile({ Header }) {
               : "My Profile"}
           </h2>
 
-          {/* Profile Info */}
+          {/* Static Profile Info */}
           {!editProfile && !showChangePassword && (
             <div className="space-y-4 text-center">
               <p>
@@ -358,13 +354,6 @@ export default function UserProfile({ Header }) {
                     setEditProfile(false);
                     setImageFile(null);
                     setImagePreview(user.image || null);
-                    setFormData((prev) => ({
-                      ...prev,
-                      firstName: user.firstName || "",
-                      lastName: user.lastName || "",
-                      phone: user.phone || "",
-                      image: user.image || "",
-                    }));
                   }}
                 >
                   Cancel
@@ -441,7 +430,7 @@ export default function UserProfile({ Header }) {
         </aside>
       </div>
 
-      {/* Order Modal */}
+      {/* Order Details Modal */}
       {selectedOrder && (
         <div
           className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4"
