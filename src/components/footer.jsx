@@ -101,7 +101,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/faq"
+                  to="/faqs"
                   className="hover:underline hover:text-pink-200 transition"
                 >
                   FAQs
