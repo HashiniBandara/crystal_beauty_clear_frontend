@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { GrGoogle } from "react-icons/gr";
 
@@ -10,24 +10,31 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.registered) {
+      toast.success("User registered successfully");
+      setTimeout(() => {
+        navigate(location.pathname, { replace: true });
+      }, 100);
+    }
+  }, [location.state]);
+
   const loginWithGoogle = useGoogleLogin({
     onSuccess: (res) => {
-      //console.log(res);
       setLoading(true);
       axios
         .post(import.meta.env.VITE_BACKEND_URL + "/api/user/google", {
           accessToken: res.access_token,
         })
         .then((response) => {
-          console.log("Login Response:", response.data);
           if (response.data.success) {
-            // Ensure success before showing toast
             toast.success("Login successful");
           } else {
             toast.error(response.data.message || "Login failed");
           }
           localStorage.setItem("token", response.data.token);
-
           const user = response.data.user;
           if (user.role === "admin") {
             navigate("/admin/dashboard");
@@ -35,34 +42,28 @@ export default function LoginPage() {
             navigate("/");
           }
           setLoading(false);
-        }).catch((error) => {
-          console.log("Login Failed", error.response?.data);
+        })
+        .catch((error) => {
           toast.error(error.response?.data?.message || "Login failed");
           setLoading(false);
         });
     },
   });
 
-
   function handleLogin() {
-    // console.log("Email:", email);
-    // console.log("Password:", password);
     setLoading(true);
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "/api/user/login", {
-        email: email,
-        password: password,
+        email,
+        password,
       })
       .then((response) => {
-        console.log("Login Response:", response.data);
         if (response.data.success) {
-          // Ensure success before showing toast
           toast.success("Login successful");
         } else {
           toast.error(response.data.message || "Login failed");
         }
         localStorage.setItem("token", response.data.token);
-
         const user = response.data.user;
         if (user.role === "admin") {
           navigate("/admin/dashboard");
@@ -72,56 +73,81 @@ export default function LoginPage() {
         setLoading(false);
       })
       .catch((error) => {
-        console.log("Login Failed", error.response?.data);
         toast.error(error.response?.data?.message || "Login failed");
         setLoading(false);
       });
-
-    console.log("Login button clicked!");
   }
 
-  
-
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-[url(/login-bg.jpg)] bg-cover bg-center flex">
-      <div className="w-[50%] h-full"></div>
-      <div className="w-[50%] h-full flex justify-center items-center">
-        <div className="w-[450px] h-[600px] backdrop-blur-xl shadow-xl rounded-xl flex flex-col justify-center items-center">
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="email"
-            placeholder="Email"
-          />
-          <input
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-[400px] h-[50px] border border-white rounded-xl text-center m-[5px]"
-            type="password"
-            placeholder="Password"
-          />
-          <button
-            onClick={handleLogin}
-            className="w-[400px] h-[50px] bg-green-500 text-white rounded-xl text-center m-[5px] cursor-pointer"
-          >
-            {/* Login */}
-            {loading ? "Loading..." : "Login"}
-          </button>
-          {/* google login */}
-          <button
-            className="w-[400px] h-[50px] bg-green-500 text-white rounded-xl text-center m-[5px] cursor-pointer flex items-center justify-center"
-            onClick={loginWithGoogle}
-          >
-            {loading ? "Loading..." : "Login with Google "}
-            <GrGoogle className="mr-[10px] ml-[10px]" />
-            {/* Login with Google */}
-          </button>
-          <p className="text-gray-600 text-center m-[10px]">
-            Don't have an account?{" "}
-            <span className="text-green-500 cursor-pointer hover:text-green-700">
-              <Link to={"/register"}>Register Now</Link>
-            </span>
-          </p>
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 sm:px-6 lg:px-8" style={{ backgroundImage: "url('/login-bg.jpg')" }}>
+      <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl max-w-md w-full p-8 sm:p-10 flex flex-col items-center">
+        {/* Logo */}
+        <img src="/logo/cbc-logo-withoutbg.png" alt="Logo" className="w-[300px] h-auto mb-6" />
+
+        {/* Email input */}
+        <input
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="Email"
+          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+
+        {/* Password input */}
+        <input
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          placeholder="Password"
+          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+
+        {/* Login button */}
+        <button
+          onClick={handleLogin}
+          disabled={loading}
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-4"
+        >
+          {loading ? "Loading..." : "Login"}
+        </button>
+
+        {/* OR divider */}
+        <div className="relative w-full mb-4">
+          <hr className="border-gray-300" />
+          <span className="absolute top-[-12px] left-1/2 transform -translate-x-1/2 bg-white px-2 text-sm text-gray-500">
+            OR
+          </span>
         </div>
+
+        {/* Google login */}
+        <button
+          onClick={loginWithGoogle}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 border border-pink-500 text-pink-700 py-3 rounded-lg font-semibold hover:bg-pink-50 transition duration-200 mb-4"
+        >
+          <GrGoogle className="text-xl" />
+          {loading ? "Loading..." : "Login with Google"}
+        </button>
+
+        {/* Register link */}
+        <p className="text-sm text-gray-700 mb-2">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-pink-600 hover:underline hover:text-pink-800"
+          >
+            Register Now
+          </Link>
+        </p>
+
+        {/* Forgot password */}
+        <p className="text-sm text-gray-700">
+          Forgot your password?{" "}
+          <Link
+            to="/forget"
+            className="text-pink-600 hover:underline hover:text-pink-800"
+          >
+            Reset Password
+          </Link>
+        </p>
       </div>
     </div>
   );

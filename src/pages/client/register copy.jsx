@@ -21,8 +21,7 @@ export default function RegisterPage() {
   }
 
   async function handleRegister() {
-    const { firstName, lastName, email, phone, password, confirmPassword } =
-      formData;
+    const { firstName, lastName, email, phone, password, confirmPassword } = formData;
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
@@ -44,13 +43,15 @@ export default function RegisterPage() {
       );
 
     //   if (response.data.success) {
-    //     toast.success("Registration successful");
-    //     navigate("/login");
+    //     // ✅ Pass state to Login page to show success toast
+    //     setTimeout(() => {
+    //       navigate("/login", { state: { registered: true } });
+    //     }, 500);
     //   } 
     if (response.data.success) {
-        toast.success("Registration successful");
-        setTimeout(() => navigate("/login"), 1500); // 👈 Delay navigation
+        navigate("/login", { state: { registered: true } });
       }
+      
       else {
         toast.error(response.data.message || "Registration failed");
       }
@@ -117,6 +118,7 @@ export default function RegisterPage() {
           <button
             onClick={handleRegister}
             className="w-[400px] h-[50px] bg-green-500 text-white rounded-xl text-center m-[5px] cursor-pointer"
+            disabled={loading}
           >
             {loading ? "Registering..." : "Register"}
           </button>

@@ -316,6 +316,7 @@ export default function HomePageDesign() {
         )}
       </section>
 
+
       {/* Benefits */}
       <section className="bg-pink-50 py-20 px-4 sm:px-10 text-center">
         <h2 className="text-3xl font-bold mb-12">
