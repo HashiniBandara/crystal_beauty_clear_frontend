@@ -316,7 +316,53 @@ export default function HomePageDesign() {
         )}
       </section>
 
-     
+
+      {/* Benefits */}
+      <section className="bg-pink-50 py-20 px-4 sm:px-10 text-center">
+        <h2 className="text-3xl font-bold mb-12">
+          Why Choose Cristal Beauty Clear?
+        </h2>
+        <div className="grid gap-10 md:grid-cols-3 max-w-6xl mx-auto">
+          {/* Benefit 1 */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="flex flex-col items-center">
+              <PiPottedPlantDuotone className=" text-5xl mb-4" />
+              <h4 className="text-xl font-semibold mb-2 text-[#802549]">
+                Natural Ingredients
+              </h4>
+              <p className="text-gray-600 max-w-xs">
+                Crafted with carefully selected natural ingredients to nourish and protect your skin.
+              </p>
+            </div>
+          </div>
+
+          {/* Benefit 2 */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="flex flex-col items-center">
+          <PiRabbitDuotone className=" text-5xl mb-4" />
+              <h4 className="text-xl font-semibold mb-2 text-[#802549]">
+                Cruelty-Free
+              </h4>
+              <p className="text-gray-600 max-w-xs">
+                 Absolutely cruelty-free - because compassion is always in style.
+              </p>
+            </div>
+          </div>
+
+          {/* Benefit 3 */}
+          <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="flex flex-col items-center">
+             <PiSparkleDuotone className=" text-5xl mb-4" />
+              <h4 className="text-xl font-semibold mb-2 text-[#802549]">
+                Skin-Loving Formulas
+              </h4>
+              <p className="text-gray-600 max-w-xs">
+                Gentle, hydrating care for every skin type and tone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
      
     </div>
