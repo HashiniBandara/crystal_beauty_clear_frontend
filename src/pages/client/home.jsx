@@ -8,6 +8,8 @@ import {
   FaChevronRight,
   FaLeaf,
 } from "react-icons/fa";
+import { PiPottedPlantDuotone, PiRabbitDuotone, PiSparkleDuotone } from "react-icons/pi";
+import { GiLindenLeaf } from "react-icons/gi";
 
 export default function HomePageDesign() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -28,10 +30,7 @@ export default function HomePageDesign() {
     "/images/banner4.jpg",
     "/images/banner5.jpg",
     "/images/banner6.png",
-    "/images/banner7.jpg",
-    "/images/banner8.png",
-    "/images/banner9.png",
-    "/images/banner10.jpg",
+    "/images/banner7.png",
   ];
 
   const scrollRef = useRef();
@@ -287,18 +286,21 @@ export default function HomePageDesign() {
               {allReviews.slice(0, 20).map((review) => (
                 <div
                   key={review.reviewId}
-                  className="bg-white p-6 rounded-xl shadow flex-shrink-0 w-72 flex flex-col justify-between h-[250px]"
+                  className="bg-white p-6 rounded-xl shadow flex-shrink-0 w-82 flex flex-col  h-[250px]"
                 >
-                  <p className="italic text-gray-700 mb-4 line-clamp-3 min-h-[60px]">
-                    “{review.comment}”
-                  </p>
-                  {renderStars(review.rating)}
                   <div className="flex flex-col items-center mt-4">
+                    <div className="w-10 h-10 rounded-full bg-pink-200 text-pink-800 flex items-center justify-center font-bold uppercase text-lg">
+                      {review.userName?.[0] || "U"}
+                    </div>
                     <h4 className="font-semibold truncate">
                       {review.userName}
                     </h4>
                     <p className="text-sm text-gray-400">
                       {new Date(review.createdAt).toLocaleDateString()}
+                    </p>
+                    <p className="text-center">{renderStars(review.rating)}</p>
+                    <p className="italic justify-between text-gray-700 mb-4 line-clamp-3 min-h-[60px]">
+                      “{review.comment}”
                     </p>
                   </div>
                 </div>
@@ -314,53 +316,9 @@ export default function HomePageDesign() {
         )}
       </section>
 
-      {/* Benefits */}
-      <section className="bg-pink-50 py-16 px-4 sm:px-10 text-center">
-        <h2 className="text-3xl font-bold mb-12">
-          Why Choose Cristal Beauty Clear?
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div>
-            <h4 className="text-xl font-semibold mb-2">
-              <FaLeaf className="inline-block text-[ #8deb93 ] text-4xl mr-2" />
-              Natural Ingredients
-            </h4>
-            <p className="text-gray-700">
-              Made from 100% fruit-based natural extracts.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-xl font-semibold mb-2">Cruelty-Free</h4>
-            <p className="text-gray-700">
-              No animal testing – ever. Beauty with a conscience.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-xl font-semibold mb-2">Skin-Loving Formulas</h4>
-            <p className="text-gray-700">
-              Gentle, hydrating care for every skin type.
-            </p>
-          </div>
-        </div>
-      </section>
+     
 
-      {/* Newsletter */}
-      <section className="bg-[#802549] text-white py-16 text-center px-4">
-        <h2 className="text-3xl font-bold mb-4">Get Exclusive Offers</h2>
-        <p className="mb-6 text-lg">
-          Sign up for our newsletter and be the first to know!
-        </p>
-        <div className="flex justify-center">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="p-3 rounded-l-full w-64 text-[#802549] outline-none"
-          />
-          <button className="bg-pink-600 text-white px-6 py-3 rounded-r-full hover:bg-pink-700 transition">
-            Subscribe
-          </button>
-        </div>
-      </section>
+     
     </div>
   );
 }
