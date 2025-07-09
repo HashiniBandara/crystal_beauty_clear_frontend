@@ -10,6 +10,8 @@ import Footer from "../components/footer";
 import SkincarePage from "./client/SkincarePage";
 import MakeupPage from "./client/MakeupPage";
 import HaircarePage from "./client/HaircarePage";
+import ContactPage from "./client/ContactPage";
+import FAQPage from "./client/FAQPage";
 
 // export default function HomePage() {
 //   return (
@@ -48,6 +50,8 @@ export default function HomePage() {
           <Route path="/category/skincare" element={<SkincarePage />} />
           <Route path="/category/makeup" element={<MakeupPage />} />
           <Route path="/category/haircare" element={<HaircarePage />} />
+           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faqs" element={<FAQPage />} />
           <Route path="/*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>
