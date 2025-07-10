@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { GrGoogle } from "react-icons/gr";
+import { AiFillHome, AiTwotoneHome } from "react-icons/ai";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -79,10 +80,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 sm:px-6 lg:px-8" style={{ backgroundImage: "url('/login-bg.jpg')" }}>
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 sm:px-6 lg:px-8"
+      style={{ backgroundImage: "url('/login-bg.jpg')" }}
+    >
       <div className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl max-w-md w-full p-8 sm:p-10 flex flex-col items-center">
         {/* Logo */}
-        <img src="/logo/cbc-logo-withoutbg.png" alt="Logo" className="w-[300px] h-auto mb-6" />
+        <img
+          src="/logo/cbc-logo-withoutbg.png"
+          alt="Logo"
+          className="w-[300px] h-auto mb-6"
+        />
 
         {/* Email input */}
         <input
@@ -139,13 +147,24 @@ export default function LoginPage() {
         </p>
 
         {/* Forgot password */}
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-gray-700 mb-2">
           Forgot your password?{" "}
           <Link
             to="/forget"
             className="text-pink-600 hover:underline hover:text-pink-800"
           >
             Reset Password
+          </Link>
+        </p>
+
+        {/* Back to Home Icon */}
+        <p className="text-sm text-gray-700 flex items-center">
+          Back to home{" "}
+          <Link
+            to="/"
+            className="text-pink-600 hover:underline hover:text-pink-800 text-lg mx-2"
+          >
+            <AiTwotoneHome />
           </Link>
         </p>
       </div>

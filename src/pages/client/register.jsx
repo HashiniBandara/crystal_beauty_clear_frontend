@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { AiTwotoneHome } from "react-icons/ai";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -65,7 +66,7 @@ export default function RegisterPage() {
           value={formData.firstName}
           type="text"
           placeholder="First Name"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -73,7 +74,7 @@ export default function RegisterPage() {
           value={formData.lastName}
           type="text"
           placeholder="Last Name"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -81,7 +82,7 @@ export default function RegisterPage() {
           value={formData.email}
           type="email"
           placeholder="Email"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -89,7 +90,7 @@ export default function RegisterPage() {
           value={formData.phone}
           type="text"
           placeholder="Phone Number"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -97,7 +98,7 @@ export default function RegisterPage() {
           value={formData.password}
           type="password"
           placeholder="Password"
-          className="w-full mb-3 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
         <input
           onChange={handleChange}
@@ -105,20 +106,20 @@ export default function RegisterPage() {
           value={formData.confirmPassword}
           type="password"
           placeholder="Confirm Password"
-          className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         />
 
         {/* Register button */}
         <button
           onClick={handleRegister}
           disabled={loading}
-          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-4"
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-lg font-semibold transition duration-200 mb-1"
         >
           {loading ? "Registering..." : "Register"}
         </button>
 
         {/* Already have an account */}
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-gray-700 mb-1">
           Already have an account?{" "}
           <Link
             to="/login"
@@ -127,6 +128,16 @@ export default function RegisterPage() {
             Login
           </Link>
         </p>
+         {/* Back to Home Icon */}
+                <p className="text-sm text-gray-700 flex items-center">
+                  Back to home{" "}
+                  <Link
+                    to="/"
+                    className="text-pink-600 hover:underline hover:text-pink-800 text-lg mx-2"
+                  >
+                    <AiTwotoneHome />
+                  </Link>
+                </p>
       </div>
     </div>
   );
