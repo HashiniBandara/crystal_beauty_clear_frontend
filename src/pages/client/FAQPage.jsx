@@ -52,7 +52,7 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="bg-[#fff5f8]  text-[#802549] px-4 py-16 sm:px-10 mt-10 font-sans">
+    <div className="bg-[#fff5f8]  text-[#802549] px-4 py-16 sm:px-10 font-sans">
       <h1 className="text-4xl font-bold text-center mb-12">
         Frequently Asked Questions
       </h1>
