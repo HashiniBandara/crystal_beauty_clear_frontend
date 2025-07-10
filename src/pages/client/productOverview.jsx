@@ -19,24 +19,52 @@ export default function ProductOverview() {
   const [comment, setComment] = useState("");
   const [status, setStatus] = useState("loading");
   const token = localStorage.getItem("token");
-  const isAdmin = token && JSON.parse(atob(token.split(".")[1])).role === "admin";
+  const isAdmin =
+    token && JSON.parse(atob(token.split(".")[1])).role === "admin";
 
+  
   function ProductCard({ product }) {
+    const navigate = useNavigate();
+
     return (
       <div
-        onClick={() => navigate(`/product/${product.productId}`)}
-        className="cursor-pointer flex flex-col bg-white rounded-xl shadow-md hover:shadow-lg transition p-4"
-        title={product.name}
+        onClick={() => navigate(`/overview/${product.productId}`)}
+        className="relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition w-full max-w-[300px] mx-auto cursor-pointer"
       >
-        <div className="w-full aspect-[4/3] overflow-hidden rounded-lg mb-3">
+        {/* Badge */}
+        {product.isFeatured && (
+          <span className="absolute top-2 right-2 bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+            Featured
+          </span>
+        )}
+        {product.isTrending && !product.isFeatured && (
+          <span className="absolute top-2 right-2 bg-pink-600 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+            Trending
+          </span>
+        )}
+
+        {/* Product Image */}
+        {product.images?.[0] && (
           <img
-            src={product.images?.[0] || ""}
+            src={product.images[0]}
             alt={product.name}
-            className="object-cover w-full h-full transition-transform hover:scale-105"
+            className="w-full h-[300px] object-cover"
           />
+        )}
+
+        {/* Product Content */}
+        <div className="p-4">
+          <p className="text-gray-400 text-xs">{product.productId}</p>
+          <p className="text-lg font-bold">{product.name}</p>
+          <p className="text-lg text-pink-500">
+            {product.price.toFixed(2)}{" "}
+            {product.price < product.labeledPrice && (
+              <span className="line-through text-gray-400 text-sm">
+                {product.labeledPrice.toFixed(2)}
+              </span>
+            )}
+          </p>
         </div>
-        <h3 className="font-semibold text-lg text-[#802549] mb-1 truncate">{product.name}</h3>
-        <p className="text-pink-800 font-semibold">LKR {product.price.toFixed(2)}</p>
       </div>
     );
   }
@@ -44,12 +72,18 @@ export default function ProductOverview() {
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
-      if (rating >= i) stars.push(<FaStar key={i} className="text-yellow-400" />);
-      else if (rating >= i - 0.5) stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />);
+      if (rating >= i)
+        stars.push(<FaStar key={i} className="text-yellow-400" />);
+      else if (rating >= i - 0.5)
+        stars.push(<FaStarHalfAlt key={i} className="text-yellow-400" />);
       else stars.push(<FaRegStar key={i} className="text-yellow-400" />);
     }
     return <div className="flex gap-1 mt-2">{stars}</div>;
   };
+
+  useEffect(() => {
+    setStatus("loading");
+  }, [id]);
 
   useEffect(() => {
     if (status === "loading") {
@@ -57,7 +91,9 @@ export default function ProductOverview() {
         .get(`${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`)
         .then((res) => {
           setProduct(res.data.product);
-          return axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/review/product/${id}`);
+          return axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}/api/review/product/${id}`
+          );
         })
         .then((res) => {
           setReviews(res.data);
@@ -68,21 +104,30 @@ export default function ProductOverview() {
           setStatus("error");
         });
     }
-  }, [status, id]);
+  }, [status]);
 
   useEffect(() => {
-    if (product?.categoryId) {
+    if (product?.categoryId && product?.productId) {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/product/category/${product.categoryId}`)
+        .get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/product/category/${
+            product.categoryId
+          }`
+        )
         .then((res) => {
-          const related = res.data.filter((p) => p.productId !== product.productId);
-          setRelatedProducts(related.slice(0, 4));
+          const filtered = res.data.filter(
+            (p) => p.productId !== product.productId
+          );
+
+          // Shuffle and take 4 random items
+          const shuffled = filtered.sort(() => 0.5 - Math.random());
+          setRelatedProducts(shuffled.slice(0, 4));
         })
         .catch(() => {
           setRelatedProducts([]);
         });
     }
-  }, [product]);
+  }, [product?.categoryId, product?.productId]);
 
   const submitReview = async () => {
     if (!token) {
@@ -144,7 +189,9 @@ export default function ProductOverview() {
     );
 
   const averageRating =
-    reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
+    reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
 
   return (
     <div className="min-h-screen bg-[#fdf6f0] text-[#802549] font-sans px-4 py-8 lg:px-20 lg:py-12">
@@ -176,7 +223,9 @@ export default function ProductOverview() {
               )}
             </div>
             {reviews.length > 0 && renderStars(averageRating)}
-            <p className="text-gray-700 leading-relaxed mt-4">{product.description}</p>
+            <p className="text-gray-700 leading-relaxed mt-4">
+              {product.description}
+            </p>
           </div>
 
           <div className="mt-8 flex gap-6">
