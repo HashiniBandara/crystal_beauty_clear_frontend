@@ -8,7 +8,11 @@ import {
   FaChevronRight,
   FaLeaf,
 } from "react-icons/fa";
-import { PiPottedPlantDuotone, PiRabbitDuotone, PiSparkleDuotone } from "react-icons/pi";
+import {
+  PiPottedPlantDuotone,
+  PiRabbitDuotone,
+  PiSparkleDuotone,
+} from "react-icons/pi";
 import { GiLindenLeaf } from "react-icons/gi";
 
 export default function HomePageDesign() {
@@ -127,6 +131,12 @@ export default function HomePageDesign() {
     );
   };
 
+  const categoryLinks = {
+    skincare: "/category/skincare",
+    makeup: "/category/makeup",
+    haircare: "/category/haircare",
+  };
+
   const trendingProducts = products.filter((p) => p.isTrending);
   const featuredProducts = products.filter((p) => p.isFeatured);
   const bestSellers = [...products]
@@ -193,8 +203,13 @@ export default function HomePageDesign() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {categories.map((cat) => (
+            // <Link
+            //   to={`/products?category=${cat.name}`}
+            //   key={cat.categoryId}
+            //   className="bg-[#fdf6f0] border rounded-xl shadow hover:shadow-lg transition overflow-hidden"
+            // >
             <Link
-              to={`/products?category=${cat.name}`}
+              to={categoryLinks[cat.name.toLowerCase()] || "/products"}
               key={cat.categoryId}
               className="bg-[#fdf6f0] border rounded-xl shadow hover:shadow-lg transition overflow-hidden"
             >
@@ -316,7 +331,6 @@ export default function HomePageDesign() {
         )}
       </section>
 
-
       {/* Benefits */}
       <section className="bg-pink-50 py-20 px-4 sm:px-10 text-center">
         <h2 className="text-3xl font-bold mb-12">
@@ -331,7 +345,8 @@ export default function HomePageDesign() {
                 Natural Ingredients
               </h4>
               <p className="text-gray-600 max-w-xs">
-                Crafted with carefully selected natural ingredients to nourish and protect your skin.
+                Crafted with carefully selected natural ingredients to nourish
+                and protect your skin.
               </p>
             </div>
           </div>
@@ -339,12 +354,12 @@ export default function HomePageDesign() {
           {/* Benefit 2 */}
           <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
             <div className="flex flex-col items-center">
-          <PiRabbitDuotone className=" text-5xl mb-4" />
+              <PiRabbitDuotone className=" text-5xl mb-4" />
               <h4 className="text-xl font-semibold mb-2 text-[#802549]">
                 Cruelty-Free
               </h4>
               <p className="text-gray-600 max-w-xs">
-                 Absolutely cruelty-free - because compassion is always in style.
+                Absolutely cruelty-free - because compassion is always in style.
               </p>
             </div>
           </div>
@@ -352,7 +367,7 @@ export default function HomePageDesign() {
           {/* Benefit 3 */}
           <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
             <div className="flex flex-col items-center">
-             <PiSparkleDuotone className=" text-5xl mb-4" />
+              <PiSparkleDuotone className=" text-5xl mb-4" />
               <h4 className="text-xl font-semibold mb-2 text-[#802549]">
                 Skin-Loving Formulas
               </h4>
@@ -363,8 +378,6 @@ export default function HomePageDesign() {
           </div>
         </div>
       </section>
-
-     
     </div>
   );
 }
