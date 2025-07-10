@@ -2,7 +2,7 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function ContactPage() {
   return (
-    <div className="bg-[#fff5f8] text-[#802549] px-4 py-16 sm:px-10 mt-10 font-sans">
+    <div className="bg-[#fff5f8] text-[#802549] px-4 py-16 sm:px-10  font-sans">
       <h1 className="text-4xl font-bold text-center mb-8">Contact Us</h1>
 
       <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">

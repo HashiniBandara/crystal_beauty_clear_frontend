@@ -96,7 +96,7 @@ export default function HaircarePage() {
 
   return (
     <div className="min-h-screen bg-[#fff5f8] text-[#802549] pt-28 pb-16 px-4">
-      <h1 className="text-3xl font-bold text-center mb-10">Haircare Essentials</h1>
+      <h1 className="text-3xl font-bold text-center mb-10">Explore Haircare Products</h1>
 
       {/* Search and Sort UI */}
       <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
