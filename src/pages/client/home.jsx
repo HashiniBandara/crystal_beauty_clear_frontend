@@ -174,7 +174,7 @@ export default function HomePageDesign() {
   return (
     <div className="font-sans text-[#802549] bg-[#fdf6f0]">
       {/* Hero */}
-      <div className="relative w-full h-[75vh] overflow-hidden">
+      {/* <div className="relative w-full h-[75vh] overflow-hidden">
         <img
           src={slides[currentSlide]}
           alt="Banner"
@@ -190,6 +190,27 @@ export default function HomePageDesign() {
           <Link
             to="/products"
             className="bg-[#802549] hover:bg-pink-700 text-white px-6 py-3 rounded-full font-semibold transition"
+          >
+            Shop Now
+          </Link>
+        </div>
+      </div> */}
+      <div className="relative w-full max-h-[90vh] overflow-hidden">
+        <img
+          src={slides[currentSlide]}
+          alt="Banner"
+          className="w-full object-cover sm:h-[75vh] h-[40vh] transition duration-700"
+        />
+        <div className="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-white px-4 sm:px-6 text-center">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3">
+            Enhance Your Beauty Naturally
+          </h1>
+          <p className="text-sm sm:text-lg mb-5 max-w-2xl">
+            Discover organic skincare & makeup crafted with love.
+          </p>
+          <Link
+            to="/products"
+            className="bg-[#802549] hover:bg-pink-700 text-white px-5 py-2 sm:px-6 sm:py-3 rounded-full font-semibold transition text-sm sm:text-base"
           >
             Shop Now
           </Link>
