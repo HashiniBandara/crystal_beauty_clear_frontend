@@ -3,7 +3,7 @@ import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { FaStar, FaUsers } from "react-icons/fa6";
 import { MdWarehouse } from "react-icons/md";
 import { FaFileInvoice } from "react-icons/fa6";
-import { FaBoxes } from "react-icons/fa";
+import { FaBoxes, FaUserEdit } from "react-icons/fa";
 import AdminProductsPage from "./admin/products";
 import AddProductForm from "./admin/addProductForm";
 import EditProductForm from "./admin/editProduct";
@@ -17,10 +17,14 @@ import Loader from "../components/loader";
 import toast from "react-hot-toast";
 import axios from "axios";
 import AdminReviewsPage from "./admin/reviews";
+import AdminProfile from "./admin/AdminProfile";
 
 export default function AdminPage() {
   const [userValidated, setUserValidated] = useState(false);
   const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("");
+  const [userFirstName, setUserFirstName] = useState("");
+  const [userLastName, setUserLastName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,14 +34,19 @@ export default function AdminPage() {
       navigate("/login");
       return;
     }
+
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/user/current", {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
-        if (res.data.user.role === "admin") {
+        const user = res.data.user;
+        if (user.role === "admin") {
           setUserValidated(true);
-          setUserName(res.data.user.firstName);
+          setUserName(user.firstName);
+          setUserFirstName(user.firstName);
+          setUserLastName(user.lastName);
+          setUserImage(user.image || "");
         } else {
           toast.error("You are not an admin");
           navigate("/login");
@@ -120,13 +129,46 @@ export default function AdminPage() {
             Reviews
           </Link>
         </nav>
-      </aside>
+      
+        {/* Profile Section at the bottom */}
+        <div className="mt-auto px-4 py-5 border-t border-white/20">
+          <div className="flex items-center gap-3 mb-3">
+            <img
+              src={
+                userImage ||
+                "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+              }
+              alt="Admin"
+              className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md"
+            />
+            <div className="flex-1">
+              <p className="text-base font-semibold">
+                {userFirstName} {userLastName}
+              </p>
+              <p className="text-xs text-white/70">Administrator</p>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-xs text-white/60">Online</span>
+              </div>
+            </div>
+          </div>
 
+          <Link
+            to="/admin/profile"
+            className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-all duration-200"
+          >
+            <FaUserEdit className="text-base" />
+            View Profile
+          </Link>
+        </div>
+      </aside>
       {/* Main Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="h-16 bg-[#fdf6f0] shadow flex items-center justify-end px-6 border-b border-gray-200">
-          <span className="text-gray-600 mr-4">Hello, {userName}</span>
+          <span className="text-gray-600 mr-4">
+            Hello, {userName}
+          </span>
           <button
             onClick={handleLogout}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded transition"
@@ -134,7 +176,7 @@ export default function AdminPage() {
             Logout
           </button>
         </header>
-
+       
         {/* Content */}
         <main className="flex-1 overflow-y-auto bg-white p-6">
           <Routes>
@@ -151,6 +193,7 @@ export default function AdminPage() {
             <Route path="/editProduct" element={<EditProductForm />} />
             <Route path="/orders" element={<AdminOrdersPage />} />
             <Route path="/reviews" element={<AdminReviewsPage />} />
+            <Route path="/profile" element={<AdminProfile />} />
           </Routes>
         </main>
 
