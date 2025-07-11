@@ -24,7 +24,7 @@ export default function AboutPage() {
           <p className="text-gray-700 leading-relaxed">
             Crystal Beauty Clear was born from a passion for clean beauty and
             a frustration with toxic ingredients in mainstream cosmetics. We
-            started with a small dream — to empower people with safe,
+            started with a small dream to empower people with safe,
             eco-friendly, and cruelty-free skincare that works.
           </p>
           <p className="text-gray-700 mt-4">

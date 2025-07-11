@@ -179,26 +179,27 @@ export default function Header() {
               {isCategoryOpen && (
                 <div className="ml-4 space-y-2">
                   <Link
-                    to="/category/skincare"
-                    onClick={() => setIsOpen(false)}
-                    className={linkStyle}
-                  >
-                    Skincare
-                  </Link>
-                  <Link
-                    to="/category/makeup"
-                    onClick={() => setIsOpen(false)}
-                    className={linkStyle}
-                  >
-                    Makeup
-                  </Link>
-                  <Link
-                    to="/category/haircare"
-                    onClick={() => setIsOpen(false)}
-                    className={linkStyle}
-                  >
-                    Haircare
-                  </Link>
+  to="/category/skincare"
+  onClick={() => setIsOpen(false)}
+  className="block hover:text-pink-700 transition"
+>
+  Skincare
+</Link>
+<Link
+  to="/category/makeup"
+  onClick={() => setIsOpen(false)}
+  className="block hover:text-pink-700 transition"
+>
+  Makeup
+</Link>
+<Link
+  to="/category/haircare"
+  onClick={() => setIsOpen(false)}
+  className="block hover:text-pink-700 transition"
+>
+  Haircare
+</Link>
+
                 </div>
               )}
 
@@ -207,21 +208,20 @@ export default function Header() {
                 onClick={() => setIsOpen(false)}
                 className={linkStyle}
               >
-                Contact
+                Contact Us
               </Link>
               <Link
-                to="/reviews"
+                to="/about"
                 onClick={() => setIsOpen(false)}
                 className={linkStyle}
               >
-                Reviews
+                About
               </Link>
               <Link
                 to="/cart"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center space-x-2 hover:text-pink-700 transition"
               >
-                <BsCart4 />
                 <span>Cart</span>
               </Link>
 
