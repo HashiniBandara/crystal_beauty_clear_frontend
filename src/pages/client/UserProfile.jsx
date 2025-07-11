@@ -152,7 +152,7 @@ export default function UserProfile({ Header }) {
   return (
     <div className="min-h-screen bg-[#fdf6f0] text-[#802549] font-sans">
       {Header && <Header />}
-      <div className="max-w-7xl mx-auto px-4 py-10 mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Order History */}
         <section className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-8 flex flex-col">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
