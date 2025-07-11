@@ -49,7 +49,7 @@ export default function Dashboard() {
       label: "Categories",
       count: stats.categories,
       icon: <FaBoxes className="text-white text-3xl" />,
-      color: "bg-[#f7d383]",
+      color: "bg-[#f3b758]",
     },
     {
       label: "Orders",
@@ -61,7 +61,7 @@ export default function Dashboard() {
       label: "Reviews",
       count: stats.reviews,
       icon: <FaStar className="text-white text-3xl" />,
-      color: "bg-[#aed9d1]",
+      color: "bg-[#58babb]",
     },
     {
       label: "Contact Queries",
