@@ -107,6 +107,14 @@ export default function Footer() {
                   FAQs
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/reviews"
+                  className="hover:underline hover:text-pink-200 transition"
+                >
+                  Reviews
+                </Link>
+              </li>
             </ul>
           </div>
           <div>

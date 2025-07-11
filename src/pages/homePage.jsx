@@ -17,6 +17,8 @@ import ContactPage from "./client/ContactPage";
 import FAQPage from "./client/FAQPage";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import NotFoundPage from "./client/NotFoundPage";
+import ReviewsPage from "./client/Reviews";
+import AboutPage from "./client/AboutPage";
 
 export default function HomePage() {
   const [atBottom, setAtBottom] = useState(false);
@@ -67,6 +69,8 @@ export default function HomePage() {
           <Route path="/category/haircare" element={<HaircarePage />} />
            <Route path="/contact" element={<ContactPage />} />
           <Route path="/faqs" element={<FAQPage />} />
+          <Route path="/reviews" element={<ReviewsPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </div>

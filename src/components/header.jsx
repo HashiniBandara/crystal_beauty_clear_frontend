@@ -105,10 +105,10 @@ export default function Header() {
           </div>
 
           <Link to="/contact" className={linkStyle}>
-            Contact
+            Contact Us
           </Link>
-          <Link to="/reviews" className={linkStyle}>
-            Reviews
+          <Link to="/about" className={linkStyle}>
+            About 
           </Link>
         </nav>
 
