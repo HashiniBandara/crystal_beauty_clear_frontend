@@ -55,7 +55,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fdf6f0] px-4 py-10 lg:px-20 text-[#802549] font-sans mt-10">
+    <div className="min-h-screen bg-[#fdf6f0] px-4 py-10 lg:px-20 text-[#802549] font-sans">
       <h1 className="text-3xl font-bold mb-8 text-center">Checkout</h1>
 
       <div className="space-y-6 max-w-4xl mx-auto">
