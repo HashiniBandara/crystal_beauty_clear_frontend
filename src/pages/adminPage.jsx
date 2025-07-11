@@ -19,6 +19,7 @@ import axios from "axios";
 import AdminReviewsPage from "./admin/reviews";
 import AdminProfile from "./admin/AdminProfile";
 import AdminContact from "./admin/adminContact";
+import Dashboard from "./admin/dashboard";
 
 export default function AdminPage() {
   const [userValidated, setUserValidated] = useState(false);
@@ -186,10 +187,7 @@ export default function AdminPage() {
         {/* Content */}
         <main className="flex-1 overflow-y-auto bg-white p-6">
           <Routes>
-            <Route
-              path="/"
-              element={<h1 className="text-3xl font-semibold">Dashboard</h1>}
-            />
+            <Route path="/" element={<Dashboard />} />
             <Route path="/users" element={<AdminUsersPage />} />
             <Route path="/categories" element={<AdminCategoryPage />} />
             <Route path="/addCategory" element={<AddCategoryForm />} />
