@@ -72,10 +72,13 @@ export default function AdminOrdersPage() {
     // });
 
     .filter((order) => {
-  if (statusFilter && order.status.trim().toLowerCase() !== statusFilter.toLowerCase()) return false;
-  return true;
-});
-
+      if (
+        statusFilter &&
+        order.status.trim().toLowerCase() !== statusFilter.toLowerCase()
+      )
+        return false;
+      return true;
+    });
 
   const sortedOrders = [...filteredOrders].sort((a, b) => {
     if (!sortBy) return 0;
@@ -121,6 +124,7 @@ export default function AdminOrdersPage() {
         >
           <option value="">All Statuses</option>
           <option value="Pending">Pending</option>
+          <option value="Accepted">Accepted</option>
           <option value="Processing">Processing</option>
           <option value="Delivered">Delivered</option>
           <option value="Cancelled">Cancelled</option>
@@ -162,7 +166,10 @@ export default function AdminOrdersPage() {
               </thead>
               <tbody>
                 {currentOrders.map((order) => (
-                  <tr key={order.orderId} className="border-b hover:bg-[#fdf6f0] text-center">
+                  <tr
+                    key={order.orderId}
+                    className="border-b hover:bg-[#fdf6f0] text-center"
+                  >
                     <td className="p-2">{order.orderId}</td>
                     <td className="p-2">{order.email}</td>
                     <td className="p-2">{order.name}</td>
@@ -177,13 +184,16 @@ export default function AdminOrdersPage() {
                         }
                       >
                         <option value="Pending">Pending</option>
+                        <option value="Accepted">Accepted</option>
                         <option value="Processing">Processing</option>
                         <option value="Delivered">Delivered</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </td>
                     <td className="p-2">LKR {order.total.toFixed(2)}</td>
-                    <td className="p-2">{new Date(order.date).toDateString()}</td>
+                    <td className="p-2">
+                      {new Date(order.date).toDateString()}
+                    </td>
                     <td className="p-2">
                       <button
                         onClick={() => {
@@ -229,139 +239,92 @@ export default function AdminOrdersPage() {
       )}
 
       {/* Modal */}
-      {/* {modalIsDisplaying && (
-            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[#00000080] z-20">
-              <div className="w-[600px] h-[600px] bg-white max-w-[600px] max-h-[600px] relative">
-                <div className="w-full h-[150px] ">
-                  <div className="w-full h-[50px] bg-[#802549] flex items-center justify-center text-white text-lg">
-                    Order #{displayingOrder.orderId} Details{" "}
-                  </div>
-                  <div className="row flex p-1 border-b-2 border-gray-300">
-                    <div className="w-[400px]">
-                      <p> Email: {displayingOrder.email}</p>
-                      <p> Name : {displayingOrder.name}</p>
-                      <p> Address : {displayingOrder.address}</p>
-                      <p> Phone Number : {displayingOrder.phoneNumber}</p>
-                    </div>
-                    <div className="w-[200px]">
-                      <p> Total: {displayingOrder.total.toFixed(2)}</p>
-                      <p>
-                        {" "}
-                        Date: {new Date(displayingOrder.date).toDateString()}
+      {modalIsDisplaying && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-[600px] h-[90vh] relative ">
+            {/* Modal Header */}
+            <div className="w-full h-[50px] bg-[#802549] flex items-center justify-center rounded-t-2xl">
+              <h2 className="text-lg sm:text-xl font-semibold text-white">
+                Order #{displayingOrder.orderId} Details
+              </h2>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-5 space-y-4 overflow-y-auto max-h-[calc(90vh-50px)]">
+              {/* Order Info */}
+              <div className="border-b border-gray-300 pb-4 flex flex-col sm:flex-row gap-6 text-sm sm:text-base text-gray-700">
+                <div className="flex-1 space-y-1">
+                  <p>
+                    <span className="font-semibold">Email:</span>{" "}
+                    {displayingOrder.email}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Name:</span>{" "}
+                    {displayingOrder.name}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Address:</span>{" "}
+                    {displayingOrder.address}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Phone Number:</span>{" "}
+                    {displayingOrder.phoneNumber}
+                  </p>
+                </div>
+                <div className="flex-1 space-y-1">
+                  <p>
+                    <span className="font-semibold">Total:</span> LKR{" "}
+                    {displayingOrder.total.toFixed(2)}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Date:</span>{" "}
+                    {new Date(displayingOrder.date).toDateString()}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Status:</span>{" "}
+                    {displayingOrder.status}
+                  </p>
+                </div>
+              </div>
+
+              {/* Items */}
+              <div className="space-y-4">
+                {displayingOrder.billItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-[#fdf6f0] shadow rounded-lg flex gap-4 items-center p-4"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.productName}
+                      className="w-[80px] h-[80px] object-cover rounded-md"
+                    />
+                    <div className="flex-1 overflow-hidden">
+                      <h3 className="font-bold text-lg truncate">
+                        {item.productName}
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        LKR: {item.price.toFixed(2)}
                       </p>
-                      <p> Status: {displayingOrder.status}</p>
+                      <p className="text-gray-600 text-sm">
+                        Quantity: {item.quantity}
+                      </p>
                     </div>
                   </div>
-                </div>
-                <div className="w-full h-[450px] max-h-[450px] overflow-y-scroll">
-                  {displayingOrder.billItems.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="w-full h-[100px] my-[5px] bg-[#fdf6f0] shadow-2xl flex justify-between items-center relative"
-                      >
-                        <img
-                          src={item.image}
-                          className="h-full aspect-square object-cover"
-                        />
-                        <div className="h-full max-w-[400px] w-[400px] overflow-hidden">
-                          <h1 className="text-xl font-bold">
-                            {item.productName}
-                          </h1>
-                          <h2 className="text-lg text-gray-500">
-                            LKR: {item.price.toFixed(2)}
-                          </h2>
-                          <h2 className="text-lg text-gray-500">
-                            Quantity: {item.quantity}
-                          </h2>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <button
-                  onClick={() => setModalIsDisplaying(false)}
-                  className="w-[40px] h-[40px] rounded-full bg-[#fdf6f0] shadow shadow-black flex justify-center items-center absolute top-[-20px] right-[-20px]"
-                >
-                  <IoCloseSharp />
-                </button>
+                ))}
               </div>
             </div>
-          )} */}
 
-
-
-{modalIsDisplaying && (
-  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-    <div className="bg-white rounded-2xl shadow-xl w-full max-w-[600px] h-[90vh] relative ">
-
-      {/* Modal Header */}
-      <div className="w-full h-[50px] bg-[#802549] flex items-center justify-center rounded-t-2xl">
-        <h2 className="text-lg sm:text-xl font-semibold text-white">
-          Order #{displayingOrder.orderId} Details
-        </h2>
-      </div>
-
-      {/* Modal Content */}
-      <div className="p-5 space-y-4 overflow-y-auto max-h-[calc(90vh-50px)]">
-        
-        {/* Order Info */}
-        <div className="border-b border-gray-300 pb-4 flex flex-col sm:flex-row gap-6 text-sm sm:text-base text-gray-700">
-          <div className="flex-1 space-y-1">
-            <p><span className="font-semibold">Email:</span> {displayingOrder.email}</p>
-            <p><span className="font-semibold">Name:</span> {displayingOrder.name}</p>
-            <p><span className="font-semibold">Address:</span> {displayingOrder.address}</p>
-            <p><span className="font-semibold">Phone Number:</span> {displayingOrder.phoneNumber}</p>
-          </div>
-          <div className="flex-1 space-y-1">
-            <p><span className="font-semibold">Total:</span> LKR {displayingOrder.total.toFixed(2)}</p>
-            <p><span className="font-semibold">Date:</span> {new Date(displayingOrder.date).toDateString()}</p>
-            <p><span className="font-semibold">Status:</span> {displayingOrder.status}</p>
-          </div>
-        </div>
-
-        {/* Items */}
-        <div className="space-y-4">
-          {displayingOrder.billItems.map((item, index) => (
-            <div
-              key={index}
-              className="bg-[#fdf6f0] shadow rounded-lg flex gap-4 items-center p-4"
-            >
-              <img
-                src={item.image}
-                alt={item.productName}
-                className="w-[80px] h-[80px] object-cover rounded-md"
-              />
-              <div className="flex-1 overflow-hidden">
-                <h3 className="font-bold text-lg truncate">{item.productName}</h3>
-                <p className="text-gray-600 text-sm">LKR: {item.price.toFixed(2)}</p>
-                <p className="text-gray-600 text-sm">Quantity: {item.quantity}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Close Button */}
-      {/* <button
-        onClick={() => setModalIsDisplaying(false)}
-        className="w-[40px] h-[40px] rounded-full bg-[#fdf6f0] shadow shadow-black flex justify-center items-center absolute top-[-20px] right-[-20px]"
-      >
-        <IoCloseSharp size={20} />
-      </button> */}
-
-       {/* Close Icon Button */}
+            {/* Close Icon Button */}
             <button
-             onClick={() => setModalIsDisplaying(false)}
+              onClick={() => setModalIsDisplaying(false)}
               className="w-[40px] h-[40px] rounded-full bg-[#fdf6f0] shadow shadow-black flex justify-center items-center absolute top-[-20px] right-[-20px]"
             >
               <IoCloseSharp />
             </button>
-    </div>
-  </div>
-)}
-
-
+          </div>
+        </div>
+      )}
     </div>
   );
 }

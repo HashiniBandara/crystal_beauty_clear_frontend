@@ -22,7 +22,6 @@ export default function ProductOverview() {
   const isAdmin =
     token && JSON.parse(atob(token.split(".")[1])).role === "admin";
 
-  
   function ProductCard({ product }) {
     const navigate = useNavigate();
 
@@ -228,38 +227,49 @@ export default function ProductOverview() {
             </p>
           </div>
 
-          <div className="mt-8 flex gap-6">
-            <button
-              onClick={() => {
-                addToCart(product, 1);
-                toast.success("Added to cart");
-              }}
-              className="flex-1 px-6 py-3 rounded-full bg-pink-800 text-white font-semibold hover:bg-pink-700 transition-shadow shadow-md"
-            >
-              Add to Cart
-            </button>
-            <button
-              onClick={() =>
-                navigate("/checkout", {
-                  state: {
-                    items: [
-                      {
-                        productId: product.productId,
-                        name: product.name,
-                        altName: product.altName,
-                        price: product.price,
-                        labeledPrice: product.labeledPrice,
-                        images: product.images[0],
-                        quantity: 1,
+          <div className="mt-4 flex flex-col sm:flex-row gap-6">
+            {product.stock === 0 ? (
+              <button
+                disabled
+                className="w-full px-6 py-3 rounded-full bg-gray-400 text-white font-semibold cursor-not-allowed shadow-md"
+              >
+                Sold Out – New Stock Coming Soon!
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    addToCart(product, 1);
+                    toast.success("Added to cart");
+                  }}
+                  className="flex-1 px-6 py-3 rounded-full bg-pink-800 text-white font-semibold hover:bg-pink-700 transition-shadow shadow-md"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  onClick={() =>
+                    navigate("/checkout", {
+                      state: {
+                        items: [
+                          {
+                            productId: product.productId,
+                            name: product.name,
+                            altName: product.altName,
+                            price: product.price,
+                            labeledPrice: product.labeledPrice,
+                            images: product.images[0],
+                            quantity: 1,
+                          },
+                        ],
                       },
-                    ],
-                  },
-                })
-              }
-              className="flex-1 px-6 py-3 rounded-full border border-pink-800 text-pink-800 font-semibold hover:bg-pink-800 hover:text-white transition-shadow shadow-md"
-            >
-              Buy Now
-            </button>
+                    })
+                  }
+                  className="flex-1 px-6 py-3 rounded-full border border-pink-800 text-pink-800 font-semibold hover:bg-pink-800 hover:text-white transition-shadow shadow-md"
+                >
+                  Buy Now
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
